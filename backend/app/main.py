@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm.exc import StaleDataError
 
-from app.api.v1 import auth, incidents
+from app.api.v1 import auth, incidents, workflow
 from app.core.config import get_settings
 from app.core.errors import AppError
 from app.core.logging import configure_logging, request_id_var
@@ -107,6 +107,7 @@ def create_app() -> FastAPI:
     api = APIRouter()
     api.include_router(auth.router)
     api.include_router(incidents.router)
+    api.include_router(workflow.router)
     app.include_router(api, prefix="/api/v1")
     app.include_router(api, prefix="/api", include_in_schema=False)
     return app
