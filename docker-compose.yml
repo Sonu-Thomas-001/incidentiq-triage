@@ -1,0 +1,29 @@
+# Optional: Docker is not required. See README for the native setup.
+#   DEMO_PASSWORD=choose-one docker compose up --build
+# UI http://localhost:8080  API http://localhost:8000/docs
+# Trained models are NOT in git: train them first (python -m incidentiq_ml all) or triage returns NOT_READY.
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DATABASE_URL: sqlite:////data/incidentiq.db
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
+      SECRET_KEY: ${SECRET_KEY:-}
+      CORS_ORIGINS: '["http://localhost:8080"]'
+    volumes:
+      - iiq-data:/data
+      - ./ml/artifacts:/app/ml/artifacts:ro
+    ports:
+      - "8000:8000"
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+volumes:
+  iiq-data:
