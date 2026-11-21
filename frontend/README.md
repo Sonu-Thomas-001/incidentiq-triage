@@ -35,7 +35,7 @@ npm run dev        # http://localhost:5173
 `CORS_ORIGINS` must include the frontend origin (`http://localhost:5173` is the default).
 Optional mock ServiceNow for the Admin page: `SERVICENOW_ENABLED=true SERVICENOW_MODE=mock`.
 
-Sign in with a synthetic account (`reporter@`, `analyst@`, `engineer@`, `admin@synthetic.example`)
+Sign in with a synthetic account (`reporter@`, `analyst@`, `engineer.network@`, `engineer.apps@`, `admin@synthetic.example`)
 and the `DEMO_PASSWORD` you seeded. No API keys or ServiceNow credentials are ever in browser code.
 
 ## Scripts
@@ -73,7 +73,7 @@ never used for routing).
 2. Sign in as `analyst`, open it, run triage. Review the ML output, policy priority, evidence
    and routing rationale; low confidence or demo models land in `NEEDS_REVIEW`.
 3. Approve the recommendation, or override with a reason (at least 5 characters).
-4. Sign in as `engineer`, open Team Queues and accept the assignment (or reassign with a reason).
+4. Sign in as `engineer.network` (the team the incident was assigned to), open Team Queues and accept the assignment (or reassign with a reason).
 5. Open the Audit Timeline, Overview and Analytics to see the resulting events and metrics.
 
 ## Screenshots
