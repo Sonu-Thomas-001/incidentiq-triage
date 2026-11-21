@@ -181,6 +181,31 @@ Triage `status`: `NOT_READY` (no usable model), `DEMO` (at least one output come
 - Priority is a deterministic function of impact x urgency (0 violations in 141,712 events), so it is a policy, not a learned result.
 - Synthetic-demo results exist but reflect generator design and must not be read as real accuracy.
 
+## Phase 3: LangGraph workflow, Gemini assistance, ServiceNow adapter
+
+Supervised ML stays the core prediction engine; Phase 3 adds a controlled, auditable workflow and
+optional integrations, **all off by default and fully functional offline**. Details, state diagram and
+privacy limits: [docs/architecture/phase3-workflow.md](docs/architecture/phase3-workflow.md).
+
+| Endpoint (under `/api/v1`) | Role | Purpose |
+|---|---|---|
+| `POST /workflow/incidents/{id}/run` | analyst, admin | Run the LangGraph triage workflow; ends in `NEEDS_REVIEW`; idempotent |
+| `POST /workflow/incidents/{id}/approve` | analyst, admin | Approve assignment (reason required when deviating) |
+| `GET /workflow/incidents/{id}/runs` | staff | Stored runs with node trace |
+| `GET /workflow/config` | analyst, admin | Effective thresholds/flags, no secrets |
+| `GET /integrations/servicenow/health` | analyst, admin | State and reachability |
+| `GET /integrations/servicenow/incidents[/{sys_id}]`, `/assignment-groups` | analyst, admin | Paginated read-only remote views |
+| `POST /integrations/servicenow/import` | analyst, admin | Idempotent import of an open record |
+| `GET/POST /integrations/servicenow/team-mappings` | analyst+ / admin | Team to assignment-group sys_id |
+| `POST /integrations/servicenow/incidents/{id}/sync/preview` | analyst, admin | Exact intended change, no write |
+| `POST /integrations/servicenow/incidents/{id}/sync/approve` | analyst, admin | Only write path (PATCH `assignment_group`) |
+| `GET /integrations/servicenow/incidents/{id}/sync` | staff | Sync history |
+
+Configuration variables (all in `.env.example`): `ROUTING_*`, `GEMINI_*`, `GOOGLE_API_KEY`,
+`SERVICENOW_*`. Routing is disabled by default and never auto-assigns. ServiceNow writes need
+`SERVICENOW_MODE=live` (or `mock`), a preview, explicit confirmation and the instance host. The
+ServiceNow client has been tested only against mocks, not a live instance.
+
 ## Remaining work
 
-Phase 3: UI-facing hardening (e.g. threshold-based routing rules, retraining from `feedback_labels`); Phase 4: React UI. Also: login rate limiting, refresh tokens/password change, user admin endpoints, PostgreSQL option.
+Validate routing thresholds on real held-out data and train a real-data team model (current team model is synthetic); live-instance verification of the ServiceNow adapter; retraining from `feedback_labels`; Phase 4: React UI. Also: login rate limiting, refresh tokens/password change, user admin endpoints, PostgreSQL option.
