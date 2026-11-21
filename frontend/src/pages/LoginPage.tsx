@@ -28,10 +28,28 @@ export default function LoginPage() {
   if (user) return <Navigate to={(location.state as { from?: string } | null)?.from ?? "/"} replace />;
 
   return (
-    <div className="grid min-h-screen place-items-center bg-gradient-to-br from-sky-50 via-white to-violet-50 p-4">
+    <div className="grid min-h-screen lg:grid-cols-2">
+      <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-[#0b2a6f] via-[#1d5fd8] to-[#7cc4fb] p-12 text-white lg:flex">
+        <div aria-hidden className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
+        <div aria-hidden className="absolute -bottom-32 -left-16 h-96 w-96 rounded-full bg-sky-200/20 blur-3xl" />
+        <div className="relative flex items-center gap-2 text-lg font-semibold">
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/20 ring-1 ring-white/30">
+            <Sparkles className="h-5 w-5" aria-hidden />
+          </span>
+          IncidentIQ
+        </div>
+        <div className="relative space-y-4">
+          <h2 className="text-4xl font-semibold leading-tight">Explainable triage for IT incidents.</h2>
+          <p className="max-w-md text-blue-100">
+            Classify, prioritise and route with transparent models, calibrated confidence and a human-approved audit trail.
+          </p>
+        </div>
+        <p className="relative text-xs text-blue-100">IIT Guwahati · DA377 · academic demonstration</p>
+      </div>
+      <div className="grid place-items-center bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
       <Card className="w-full max-w-sm p-6">
         <div className="mb-5 flex items-center gap-2">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-sky-400 to-violet-400 text-white">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#123a99] to-[#38a8f5] text-white">
             <Sparkles className="h-4 w-4" aria-hidden />
           </span>
           <div>
@@ -71,6 +89,7 @@ export default function LoginPage() {
           <code>DEMO_PASSWORD</code> you set when seeding the backend.
         </p>
       </Card>
+      </div>
     </div>
   );
 }

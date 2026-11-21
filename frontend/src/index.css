@@ -10,13 +10,22 @@
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  background:
+    radial-gradient(900px 420px at 100% -10%, rgba(74, 163, 245, 0.16), transparent 60%),
+    radial-gradient(700px 380px at -10% 0%, rgba(29, 95, 216, 0.1), transparent 60%),
+    linear-gradient(180deg, #f5f9ff 0%, #eef4fb 100%);
+  background-attachment: fixed;
   color: #1e293b;
   font-family: var(--font-sans);
   min-height: 100vh;
 }
 
 :focus-visible {
-  outline: 2px solid #7c6fe0;
+  outline: 2px solid #1d5fd8;
   outline-offset: 2px;
+}
+
+table thead th {
+  background: linear-gradient(180deg, #eef6ff, #e4f0fd);
+  color: #123a99;
 }

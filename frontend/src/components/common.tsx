@@ -34,12 +34,13 @@ export function SyntheticBadge() {
 
 export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+    <div className="relative mb-6 flex flex-wrap items-center justify-between gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-[#0b2a6f] via-[#1d5fd8] to-[#5bb8f7] px-6 py-5 shadow-lg shadow-blue-700/20">
+      <div aria-hidden className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
+      <div className="relative">
+        <h1 className="text-2xl font-semibold tracking-tight text-white">{title}</h1>
+        {subtitle && <p className="mt-1 text-sm text-blue-100">{subtitle}</p>}
       </div>
-      {actions}
+      <div className="relative">{actions}</div>
     </div>
   );
 }
@@ -47,7 +48,7 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
 export function EmptyState({ title, hint }: { title: string; hint?: string }) {
   return (
     <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-slate-200 bg-white/60 px-6 py-10 text-center">
-      <Inbox className="h-8 w-8 text-sky-300" aria-hidden />
+      <Inbox className="h-8 w-8 text-blue-300" aria-hidden />
       <p className="text-sm font-medium text-slate-700">{title}</p>
       {hint && <p className="max-w-md text-xs text-slate-500">{hint}</p>}
     </div>

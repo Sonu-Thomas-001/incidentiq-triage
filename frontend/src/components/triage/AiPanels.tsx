@@ -22,7 +22,7 @@ function Panel({
   tone: "sky" | "teal" | "violet";
   children: ReactNode;
 }) {
-  const border = { sky: "border-t-sky-300", teal: "border-t-teal-300", violet: "border-t-violet-300" }[tone];
+  const border = { sky: "border-t-blue-500", teal: "border-t-teal-400", violet: "border-t-violet-400" }[tone];
   return (
     <Card className={`border-t-4 ${border}`}>
       <CardHeader>

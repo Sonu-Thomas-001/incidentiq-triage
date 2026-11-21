@@ -5,14 +5,14 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from "@/components/ui
 import { api } from "@/lib/endpoints";
 import { pct } from "@/lib/utils";
 
-export const PALETTE = ["#7dd3fc", "#5eead4", "#c4b5fd", "#a5b4fc", "#99f6e4", "#bae6fd", "#ddd6fe", "#fde68a"];
+export const PALETTE = ["#123a99", "#1d5fd8", "#4aa3f5", "#8cc9fb", "#2dd4bf", "#a5b4fc", "#bfe1fc", "#fde68a"];
 
 function Stat({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
-    <Card className="bg-gradient-to-br from-white to-sky-50/60">
+    <Card className="overflow-hidden border-t-4 border-t-blue-500 bg-gradient-to-br from-white to-blue-50">
       <CardContent className="space-y-1 pt-5">
-        <p className="text-xs font-medium text-slate-500">{label}</p>
-        <p className="text-3xl font-semibold text-slate-900">{value}</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-blue-700/70">{label}</p>
+        <p className="bg-gradient-to-r from-[#0b2a6f] to-[#2b8de8] bg-clip-text text-3xl font-semibold text-transparent">{value}</p>
         {hint && <p className="text-[11px] text-slate-400">{hint}</p>}
       </CardContent>
     </Card>
@@ -81,7 +81,7 @@ export default function DashboardPage() {
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
               <YAxis allowDecimals={false} />
               <Tooltip />
-              <Bar dataKey="value" fill="#c4b5fd" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="value" fill="#2b7de0" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

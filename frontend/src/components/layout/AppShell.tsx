@@ -39,8 +39,8 @@ export function AppShell() {
           onClick={() => setOpen(false)}
           className={({ isActive }) =>
             cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-sky-50",
-              isActive && "bg-gradient-to-r from-sky-100 to-violet-100 text-slate-900",
+              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-blue-100/90 transition-colors hover:bg-white/10 hover:text-white",
+              isActive && "bg-white text-blue-900 shadow-md hover:bg-white hover:text-blue-900",
             )
           }
         >
@@ -52,22 +52,24 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[250px_1fr]">
-      <aside className="hidden border-r border-slate-100 bg-white lg:block">
-        <div className="flex items-center gap-2 px-5 py-5">
-          <span className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-sky-400 to-violet-400 text-white">
-            <Sparkles className="h-4 w-4" aria-hidden />
-          </span>
-          <span className="font-semibold text-slate-900">IncidentIQ</span>
+      <aside className="hidden bg-gradient-to-b from-[#0b2a6f] via-[#164bb8] to-[#4aa3f5] lg:block">
+        <div className="sticky top-0">
+          <div className="flex items-center gap-2 px-5 py-6">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/20 text-white ring-1 ring-white/30">
+              <Sparkles className="h-4 w-4" aria-hidden />
+            </span>
+            <span className="text-lg font-semibold tracking-tight text-white">IncidentIQ</span>
+          </div>
+          {nav}
         </div>
-        {nav}
       </aside>
 
       {open && (
-        <div className="fixed inset-0 z-30 bg-slate-900/20 lg:hidden" onClick={() => setOpen(false)}>
-          <aside className="h-full w-64 bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-30 bg-slate-900/30 lg:hidden" onClick={() => setOpen(false)}>
+          <aside className="h-full w-64 bg-gradient-to-b from-[#0b2a6f] via-[#164bb8] to-[#4aa3f5] shadow-xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-5">
-              <span className="font-semibold">IncidentIQ</span>
-              <Button variant="ghost" size="icon" aria-label="Close menu" onClick={() => setOpen(false)}>
+              <span className="font-semibold text-white">IncidentIQ</span>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10" aria-label="Close menu" onClick={() => setOpen(false)}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -77,7 +79,7 @@ export function AppShell() {
       )}
 
       <div className="min-w-0">
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-slate-100 bg-white/90 px-4 py-3 backdrop-blur lg:px-8">
+        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-blue-100 bg-white/80 px-4 py-3 backdrop-blur lg:px-8">
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu" onClick={() => setOpen(true)}>
               <Menu className="h-5 w-5" />

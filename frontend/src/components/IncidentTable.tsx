@@ -19,7 +19,7 @@ export function IncidentTable({
   const { teamName } = useTeams();
   if (items.length === 0) return <EmptyState title="No incidents match" hint={emptyHint} />;
   return (
-    <div className="overflow-x-auto rounded-2xl border border-slate-100 bg-white">
+    <div className="overflow-x-auto rounded-2xl border border-blue-100 bg-white shadow-[0_4px_20px_rgba(18,58,153,0.07)]">
       <table className="w-full min-w-[720px] text-left text-sm">
         <caption className="sr-only">Incidents</caption>
         <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
