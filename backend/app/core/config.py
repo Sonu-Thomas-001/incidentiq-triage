@@ -2,6 +2,7 @@ import logging
 import secrets
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -41,6 +42,22 @@ class Settings(BaseSettings):
     gemini_timeout_seconds: float = Field(default=20.0, gt=0, le=120)
     gemini_max_retries: int = Field(default=2, ge=0, le=5)
     gemini_max_input_chars: int = Field(default=2000, ge=200, le=8000)
+
+    # ServiceNow (user-owned Personal Developer Instance). Off by default; secrets stay server-side.
+    servicenow_enabled: bool = False
+    # read_only (default): GETs only. mock: in-memory synthetic instance. live: PATCH allowed.
+    servicenow_mode: Literal["read_only", "mock", "live"] = "read_only"
+    servicenow_instance_url: str | None = None
+    servicenow_auth: Literal["basic", "oauth"] = "basic"
+    servicenow_username: str | None = None
+    servicenow_password: SecretStr | None = None
+    servicenow_oauth_client_id: str | None = None
+    servicenow_oauth_client_secret: SecretStr | None = None
+    servicenow_timeout_seconds: float = Field(default=15.0, gt=0, le=120)
+    servicenow_max_retries: int = Field(default=2, ge=0, le=5)
+    servicenow_page_size_max: int = Field(default=100, ge=1, le=1000)
+    # Escape hatch for self-hosted/test hosts; the default only accepts https *.service-now.com.
+    servicenow_allow_any_host: bool = False
 
     def resolved_secret_key(self) -> str:
         if self.secret_key:

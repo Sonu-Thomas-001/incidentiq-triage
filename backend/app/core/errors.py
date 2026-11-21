@@ -39,3 +39,39 @@ class StaleVersionError(AppError):
 class ValidationFailure(AppError):
     status_code = 422
     code = "VALIDATION_ERROR"
+
+
+class IntegrationDisabledError(AppError):
+    status_code = 503
+    code = "INTEGRATION_DISABLED"
+
+
+class WriteDisabledError(AppError):
+    status_code = 409
+    code = "WRITE_DISABLED"
+
+
+class ConflictError(AppError):
+    status_code = 409
+    code = "CONFLICT"
+
+
+class UpstreamError(AppError):
+    """Failure talking to an external system; status/code vary with the cause."""
+
+    status_code = 502
+    code = "UPSTREAM_ERROR"
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        status_code: int = 502,
+        code: str = "UPSTREAM_ERROR",
+        details: Any = None,
+        retry_after: float | None = None,
+    ) -> None:
+        super().__init__(message, details)
+        self.status_code = status_code
+        self.code = code
+        self.retry_after = retry_after
