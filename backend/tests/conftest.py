@@ -5,15 +5,29 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.core.config import get_settings
 from app.core.security import hash_password
 from app.db.base import Base
 from app.db.session import build_engine, get_db
 from app.main import app
 from app.models import Team, User
 from app.models.enums import Role
+from app.services import ml_service
 
 PASSWORD = "test-only-Passw0rd!"
 _HASH = hash_password(PASSWORD)  # hashed once; scrypt is deliberately slow
+
+
+@pytest.fixture(autouse=True)
+def model_dir(tmp_path, monkeypatch):
+    """Every test gets an empty MODEL_DIR (=> NOT_READY) unless it builds artifacts there."""
+    d = tmp_path / "models"
+    monkeypatch.setenv("MODEL_DIR", str(d))
+    get_settings.cache_clear()
+    ml_service.clear_cache()
+    yield d
+    get_settings.cache_clear()
+    ml_service.clear_cache()
 
 
 @pytest.fixture
@@ -79,14 +93,18 @@ class Api:
     def as_(self, key: str) -> dict[str, str]:
         if key not in self._tokens:
             r = self.client.post(
-                "/api/v1/auth/login", json={"email": f"{key}@test.example", "password": PASSWORD}
+                "/api/v1/auth/login",
+                json={"email": f"{key}@test.example", "password": PASSWORD},
             )
             assert r.status_code == 200, r.text
             self._tokens[key] = {"Authorization": f"Bearer {r.json()['access_token']}"}
         return self._tokens[key]
 
     def create(self, who: str = "reporter", title: str = "VPN keeps dropping", **kw) -> dict:
-        body = {"title": title, "description": "The VPN client disconnects every few minutes."}
+        body = {
+            "title": title,
+            "description": "The VPN client disconnects every few minutes.",
+        }
         body.update(kw)
         r = self.client.post("/api/v1/incidents", json=body, headers=self.as_(who))
         assert r.status_code == 201, r.text

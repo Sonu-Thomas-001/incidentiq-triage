@@ -37,7 +37,9 @@ def test_full_lifecycle_with_audit_trail(api, world):
     assert assigned["current_assignment"]["team_id"] == str(net)
 
     r = api.post(
-        f"/incidents/{inc['id']}/accept", "eng_net", {"expected_version": assigned["version"]}
+        f"/incidents/{inc['id']}/accept",
+        "eng_net",
+        {"expected_version": assigned["version"]},
     )
     assert r.status_code == 200 and r.json()["status"] == "ACCEPTED"
     accepted = r.json()
@@ -59,7 +61,9 @@ def test_full_lifecycle_with_audit_trail(api, world):
     assert over["current_assignment"]["is_override"] is True
 
     r = api.post(
-        f"/incidents/{inc['id']}/accept", "eng_apps", {"expected_version": over["version"]}
+        f"/incidents/{inc['id']}/accept",
+        "eng_apps",
+        {"expected_version": over["version"]},
     )
     assert r.status_code == 200 and r.json()["status"] == "ACCEPTED"
 
@@ -120,7 +124,11 @@ def test_override_must_change_team_and_have_reason(api, world):
     r = api.post(
         path,
         "analyst",
-        {"expected_version": cur["version"], "team_id": str(net), "reason": "same team"},
+        {
+            "expected_version": cur["version"],
+            "team_id": str(net),
+            "reason": "same team",
+        },
     )
     assert r.status_code == 422
     r = api.post(
@@ -181,7 +189,8 @@ def test_original_text_is_immutable(session_factory, api):
     # raw SQL bypassing the ORM is blocked by the DB trigger
     with session_factory() as db, pytest.raises(DBAPIError):
         db.execute(
-            text("UPDATE incidents SET title='x' WHERE id=:i"), {"i": inc["id"].replace("-", "")}
+            text("UPDATE incidents SET title='x' WHERE id=:i"),
+            {"i": inc["id"].replace("-", "")},
         )
         db.commit()
     stored = api.get(f"/incidents/{inc['id']}", "reporter").json()
@@ -218,7 +227,7 @@ def test_model_metrics_not_ready_and_no_invented_numbers(api):
     assert r.status_code == 200
     assert r.json() == {
         "status": "NOT_READY",
-        "message": "No trained model has been registered (Phase 1). No metrics are available.",
+        "message": "No trained model has been registered. No metrics are available.",
         "models": [],
     }
     overview = api.get("/analytics/overview", "analyst").json()
