@@ -1,0 +1,100 @@
+% IncidentIQ-Triage -- IEEE two-column DRAFT.
+% NOTE: the official IITG IEEE template was not available when this draft was prepared.
+% This file uses the standard IEEEtran class. Once the IITG template is supplied, copy the
+% content of each section into it (title block, author block and any institute-specific
+% front matter will need to follow the IITG template). Not compiled locally (no LaTeX installed).
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{cite}
+
+\begin{document}
+
+\title{IncidentIQ-Triage: An Explainable Machine Learning Framework for IT Incident Classification, Priority Policy and Human-Approved Team Assignment}
+
+\author{\IEEEauthorblockN{[Student name]}
+\IEEEauthorblockA{BSc (Hons) Data Science \& AI, IIT Guwahati\\
+DA377 Term Project-I\\
+[Roll number / email]}}
+
+\maketitle
+
+\begin{abstract}
+IT service desks must classify, prioritise and route incoming incidents quickly. We present IncidentIQ-Triage, a reproducible pipeline and web application that combines supervised text and metadata models with an explicit priority policy and a human approval step. Using two public CC BY 4.0 datasets and a clearly labelled synthetic generator, we evaluate majority, rule-based, TF-IDF Logistic Regression and Linear SVM models under leakage-aware splits. On a grouped split of 2{,}229 support tickets, category macro-F1 reaches 0.800 (selected Logistic Regression) and 0.849 (Linear SVM) against 0.067 for a majority baseline. On a chronological split of an incident event log, a 44-group assignment model reaches top-1 accuracy 0.797 and top-3 0.870. Priority is shown to be a deterministic function of impact and urgency and is implemented as a policy. All results are from public or synthetic data and make no claim about operational performance.
+\end{abstract}
+
+\begin{IEEEkeywords}
+incident management, text classification, TF-IDF, calibration, explainability, leakage
+\end{IEEEkeywords}
+
+\section{Introduction}
+Incident triage assigns a category, priority and resolver group to each new report. Manual triage is slow and inconsistent, and mistakes cause reassignment delays. Machine learning can propose an assignment, but a recommendation is not a decision: errors have operational cost and probabilities must be trustworthy before any automation. This project asks which simple models are adequate on public data, how much leakage-aware evaluation changes conclusions, and how a recommender can be embedded in an auditable human-approved workflow. Contributions are: (i) leakage-controlled experiments on two public datasets; (ii) an honest treatment of priority as policy; (iii) calibrated confidence with disclosed calibration results; and (iv) a full-stack application with role-based access, optimistic concurrency and audit events.
+
+\section{Related Work}
+TF-IDF term weighting \cite{salton1988} with linear classifiers remains a strong baseline for sparse text \cite{joachims1998}, and efficient solvers are widely available \cite{fan2008}. Raw classifier scores are often poorly calibrated, and post-hoc calibration is a standard remedy \cite{niculescu2005,guo2017}. We use scikit-learn \cite{pedregosa2011} throughout. We do not compare against transformer models, which is left to future work.
+
+\section{Dataset and Methodology}
+\textbf{Data.} The ticket dataset \cite{zenodotickets} has 2{,}229 tickets with seven categories; 745 texts are exact duplicates. The event log \cite{uciincident} has 141{,}712 events for 24{,}918 incidents with anonymised groups and no free text. No public dataset provides text, structured fields and teams together, so a seeded synthetic generator is used only for the demonstration team model and is always labelled synthetic.
+
+\textbf{Leakage control.} Resolution, closure and reassignment-history fields are excluded; for the event log only first-event values are used. Tickets are split by near-duplicate group, and the event log chronologically (16{,}808 / 3{,}602 / 3{,}602 incidents). All preprocessing is fitted inside pipelines on training data. A random split yields macro-F1 0.781 versus 0.736 grouped, quantifying the inflation.
+
+\textbf{Models.} Majority, keyword-rule and category-to-team baselines are compared with TF-IDF (word and character n-grams) plus Logistic Regression or Linear SVM, and with structured-only and combined feature sets through a ColumnTransformer. Hyperparameters are tuned on validation data only, the model is selected on validation macro-F1 and the test split is evaluated once.
+
+\textbf{Priority.} Priority was verified to be a deterministic function of impact and urgency (0 violations in 141{,}712 events), so we implement this policy instead of training a model.
+
+\section{Experiments and Results}
+Table~\ref{tab:a} reports category classification on 607 test tickets (grouped split). The class EOL has no test examples.
+
+\begin{table}[h]
+\centering
+\caption{Category (real tickets), test macro-F1}
+\label{tab:a}
+\begin{tabular}{lc}
+\toprule
+Model & Macro-F1 \\
+\midrule
+Majority & 0.067 \\
+Keyword rules & 0.548 \\
+TF-IDF + LogReg (selected on validation) & 0.800 \\
+TF-IDF + Linear SVM & 0.849 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The SVM exceeds the validation-selected Logistic Regression on test; with 607 examples we regard this as within noise and keep the pre-specified selection rule.
+
+Table~\ref{tab:b} reports assignment-group prediction on the event log (44 classes). The selected model uses structured fields. Impact and urgency alone are no better than the majority baseline.
+
+\begin{table}[h]
+\centering
+\caption{Assignment group (UCI log), test}
+\label{tab:b}
+\begin{tabular}{lccc}
+\toprule
+Model & Macro-F1 & Top-1 & Top-3 \\
+\midrule
+Majority & 0.016 & -- & -- \\
+Category map & 0.174 & 0.643 & 0.762 \\
+Structured + Linear SVM & 0.650 & 0.797 & 0.870 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Calibration.} For the deployed category model, sigmoid calibration was chosen on validation. Test expected calibration error was 0.174 (Brier 0.198), worse than the native Logistic Regression probabilities (0.104); we disclose this. At a 0.9 threshold only 1.2\% of test items would be covered, so routing remains disabled by default and every assignment needs analyst approval.
+
+\textbf{Synthetic demonstration.} On the synthetic generator, category macro-F1 is 0.925 and team macro-F1 0.821. These reflect the generator and are not evidence of real-world performance.
+
+\section{Explainability}
+For linear models the product of coefficient and TF-IDF value gives an exact per-prediction contribution; the interface shows the top contributing terms. Permutation importance is used for structured columns. SHAP and LIME were deliberately omitted because they would approximate quantities that are exactly available. An optional LLM summary, when enabled, is labelled separately and never used as evidence of model reasoning or as a confidence value.
+
+\section{Limitations}
+The end-to-end application combines a real category model with a synthetic team model and is therefore labelled a demonstration. The tickets are small and templated; event-log groups are anonymised and do not map to the application's teams; the integration with ServiceNow was tested only with mocks; and the LLM component was not benchmarked. Calibration did not improve ECE for the deployed model. Results are not operational claims.
+
+\section{Conclusion}
+Simple TF-IDF linear models are strong baselines for category and group prediction on public data, but evaluation protocol matters: grouped or chronological splits lower scores relative to random splits. Priority is better handled as policy. Future work includes a real combined dataset, validated confidence thresholds, live integration tests and fairness analysis.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
