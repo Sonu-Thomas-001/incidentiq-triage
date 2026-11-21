@@ -36,3 +36,4 @@ ml/artifacts/*
 Thumbs.db
 .idea/
 .vscode/
+*.tsbuildinfo
