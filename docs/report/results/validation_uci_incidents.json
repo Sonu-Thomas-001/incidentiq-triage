@@ -1,0 +1,147 @@
+{
+  "dataset": "uci_incidents",
+  "provenance": "real",
+  "rows": 24918,
+  "columns": [
+    "incident_id",
+    "created_at",
+    "category",
+    "subcategory",
+    "u_symptom",
+    "contact_type",
+    "location",
+    "impact",
+    "urgency",
+    "priority",
+    "assignment_group",
+    "final_assignment_group",
+    "provenance"
+  ],
+  "field_registry": {
+    "incident_id": "observed (number)",
+    "short_description": "absent (log has no free text)",
+    "description": "absent",
+    "category": "observed",
+    "priority": "observed (deterministic function of impact x urgency)",
+    "assignment_group": "observed (first event; see docs)",
+    "created_at": "observed (opened_at)",
+    "service": "absent (subcategory used as nearest proxy)",
+    "impact": "observed",
+    "urgency": "observed"
+  },
+  "missing": {
+    "incident_id": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "created_at": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "category": {
+      "n": 39,
+      "pct": 0.16
+    },
+    "subcategory": {
+      "n": 69,
+      "pct": 0.28
+    },
+    "u_symptom": {
+      "n": 5735,
+      "pct": 23.02
+    },
+    "contact_type": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "location": {
+      "n": 52,
+      "pct": 0.21
+    },
+    "impact": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "urgency": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "priority": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "assignment_group": {
+      "n": 906,
+      "pct": 3.64
+    },
+    "final_assignment_group": {
+      "n": 2157,
+      "pct": 8.66
+    },
+    "provenance": {
+      "n": 0,
+      "pct": 0.0
+    }
+  },
+  "duplicates": {
+    "duplicate_incident_ids": 0,
+    "identical_feature_rows": 15485
+  },
+  "class_distribution": {
+    "assignment_group": {
+      "n_classes": 69,
+      "top": {
+        "Group 70": 12790,
+        "Group 20": 1367,
+        "nan": 906,
+        "Group 25": 764,
+        "Group 24": 698,
+        "Group 64": 622,
+        "Group 65": 501,
+        "Group 55": 416,
+        "Group 66": 390,
+        "Group 39": 375,
+        "Group 9": 344,
+        "Group 57": 341,
+        "Group 73": 333,
+        "Group 10": 324,
+        "Group 28": 304
+      },
+      "imbalance_ratio_max_to_min": 12790.0,
+      "singleton_classes": 5
+    },
+    "category": {
+      "n_classes": 57,
+      "top": {
+        "Category 42": 3629,
+        "Category 26": 3268,
+        "Category 53": 2656,
+        "Category 46": 2243,
+        "Category 32": 1494,
+        "Category 9": 1141,
+        "Category 37": 1135,
+        "Category 23": 1071,
+        "Category 20": 1067,
+        "Category 57": 916,
+        "Category 61": 805,
+        "Category 40": 686,
+        "Category 24": 638,
+        "Category 45": 625,
+        "Category 51": 545
+      },
+      "imbalance_ratio_max_to_min": 3629.0,
+      "singleton_classes": 8
+    },
+    "priority": {
+      "n_classes": 4,
+      "top": {
+        "3 - Moderate": 23681,
+        "4 - Low": 741,
+        "2 - High": 311,
+        "1 - Critical": 185
+      },
+      "imbalance_ratio_max_to_min": 128.0,
+      "singleton_classes": 0
+    }
+  }
+}

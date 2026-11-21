@@ -1,0 +1,82 @@
+{
+  "dataset": "tickets",
+  "provenance": "real",
+  "rows": 2229,
+  "columns": [
+    "incident_id",
+    "short_description",
+    "description",
+    "category",
+    "author_split",
+    "provenance"
+  ],
+  "field_registry": {
+    "incident_id": "observed (id)",
+    "short_description": "derived (first sentence of text)",
+    "description": "observed (text)",
+    "category": "observed (category_truth)",
+    "priority": "absent",
+    "assignment_group": "absent",
+    "created_at": "absent",
+    "service": "absent",
+    "impact": "absent",
+    "urgency": "absent"
+  },
+  "missing": {
+    "incident_id": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "short_description": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "description": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "category": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "author_split": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "provenance": {
+      "n": 0,
+      "pct": 0.0
+    }
+  },
+  "duplicates": {
+    "duplicate_incident_ids": 0,
+    "exact_text_duplicates": 745,
+    "normalized_text_duplicates": 784
+  },
+  "text_length_chars": {
+    "count": 2229.0,
+    "mean": 231.0,
+    "std": 218.5,
+    "min": 17.0,
+    "25%": 116.0,
+    "50%": 141.0,
+    "75%": 238.0,
+    "max": 1908.0
+  },
+  "class_distribution": {
+    "category": {
+      "n_classes": 7,
+      "top": {
+        "Support general": 762,
+        "Fileservice": 684,
+        "Software": 222,
+        "O365": 219,
+        "Active Directory": 133,
+        "Computer-Services": 106,
+        "EOL": 103
+      },
+      "imbalance_ratio_max_to_min": 7.4,
+      "singleton_classes": 0
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "dataset": "synthetic_incidents",
+  "provenance": "synthetic-demo",
+  "rows": 3000,
+  "columns": [
+    "incident_id",
+    "short_description",
+    "description",
+    "category",
+    "assignment_group",
+    "service",
+    "impact",
+    "urgency",
+    "priority",
+    "created_at",
+    "template_id",
+    "provenance",
+    "is_synthetic"
+  ],
+  "field_registry": {
+    "incident_id": "synthetic",
+    "short_description": "synthetic",
+    "description": "synthetic",
+    "category": "synthetic",
+    "priority": "derived (policy of synthetic impact x urgency)",
+    "assignment_group": "synthetic",
+    "created_at": "synthetic",
+    "service": "synthetic",
+    "impact": "synthetic",
+    "urgency": "synthetic"
+  },
+  "missing": {
+    "incident_id": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "short_description": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "description": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "category": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "assignment_group": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "service": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "impact": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "urgency": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "priority": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "created_at": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "template_id": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "provenance": {
+      "n": 0,
+      "pct": 0.0
+    },
+    "is_synthetic": {
+      "n": 0,
+      "pct": 0.0
+    }
+  },
+  "duplicates": {
+    "duplicate_incident_ids": 0,
+    "exact_text_duplicates": 2400,
+    "normalized_text_duplicates": 2400
+  },
+  "text_length_chars": {
+    "count": 3000.0,
+    "mean": 88.4,
+    "std": 11.8,
+    "min": 66.0,
+    "25%": 79.0,
+    "50%": 88.0,
+    "75%": 94.2,
+    "max": 138.0
+  },
+  "class_distribution": {
+    "category": {
+      "n_classes": 6,
+      "top": {
+        "Application": 536,
+        "Security": 515,
+        "Access": 509,
+        "Network": 498,
+        "Database": 473,
+        "Hardware": 469
+      },
+      "imbalance_ratio_max_to_min": 1.1,
+      "singleton_classes": 0
+    },
+    "assignment_group": {
+      "n_classes": 5,
+      "top": {
+        "Service Desk": 1036,
+        "Security Operations": 524,
+        "Application Support": 519,
+        "Network Operations": 501,
+        "Database Administration": 420
+      },
+      "imbalance_ratio_max_to_min": 2.5,
+      "singleton_classes": 0
+    },
+    "priority": {
+      "n_classes": 4,
+      "top": {
+        "4 - Low": 1385,
+        "3 - Moderate": 726,
+        "2 - High": 697,
+        "1 - Critical": 192
+      },
+      "imbalance_ratio_max_to_min": 7.2,
+      "singleton_classes": 0
+    }
+  }
+}

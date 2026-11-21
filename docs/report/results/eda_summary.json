@@ -1,0 +1,162 @@
+{
+  "tickets": {
+    "figures": [
+      "tickets_class_dist.png",
+      "tickets_text_length.png"
+    ],
+    "test_texts_also_in_train_exact": 0.1903,
+    "test_texts_also_in_train_normalized": 0.207,
+    "note": "No timestamps, teams, priority or impact exist in this dataset."
+  },
+  "uci": {
+    "figures": [
+      "uci_group_dist.png",
+      "uci_category_dist.png",
+      "uci_volume_over_time.png",
+      "uci_cramers_v.png"
+    ],
+    "group_top1_share": 0.5327,
+    "groups_with_lt_30_incidents": 22,
+    "first_vs_final_group_agree": 0.5768,
+    "cramers_v": {
+      "impact": {
+        "impact": 1.0,
+        "urgency": 0.769,
+        "priority": 0.932,
+        "category": 0.17,
+        "subcategory": 0.158,
+        "location": 0.194,
+        "contact_type": 0.078,
+        "assignment_group": 0.138
+      },
+      "urgency": {
+        "impact": 0.769,
+        "urgency": 1.0,
+        "priority": 0.931,
+        "category": 0.171,
+        "subcategory": 0.144,
+        "location": 0.171,
+        "contact_type": 0.0,
+        "assignment_group": 0.14
+      },
+      "priority": {
+        "impact": 0.932,
+        "urgency": 0.931,
+        "priority": 1.0,
+        "category": 0.152,
+        "subcategory": 0.155,
+        "location": 0.177,
+        "contact_type": 0.062,
+        "assignment_group": 0.137
+      },
+      "category": {
+        "impact": 0.17,
+        "urgency": 0.171,
+        "priority": 0.152,
+        "category": 1.0,
+        "subcategory": 0.727,
+        "location": 0.179,
+        "contact_type": 0.577,
+        "assignment_group": 0.401
+      },
+      "subcategory": {
+        "impact": 0.158,
+        "urgency": 0.144,
+        "priority": 0.155,
+        "category": 0.727,
+        "subcategory": 1.0,
+        "location": 0.125,
+        "contact_type": 0.551,
+        "assignment_group": 0.538
+      },
+      "location": {
+        "impact": 0.194,
+        "urgency": 0.171,
+        "priority": 0.177,
+        "category": 0.179,
+        "subcategory": 0.125,
+        "location": 1.0,
+        "contact_type": 0.509,
+        "assignment_group": 0.179
+      },
+      "contact_type": {
+        "impact": 0.078,
+        "urgency": 0.0,
+        "priority": 0.062,
+        "category": 0.577,
+        "subcategory": 0.551,
+        "location": 0.509,
+        "contact_type": 1.0,
+        "assignment_group": 0.054
+      },
+      "assignment_group": {
+        "impact": 0.138,
+        "urgency": 0.14,
+        "priority": 0.137,
+        "category": 0.401,
+        "subcategory": 0.538,
+        "location": 0.179,
+        "contact_type": 0.054,
+        "assignment_group": 1.0
+      }
+    }
+  },
+  "synthetic": {
+    "figures": [
+      "synthetic_team_dist.png",
+      "synthetic_volume_over_time.png",
+      "synthetic_cramers_v.png"
+    ],
+    "warning": "SYNTHETIC demo data",
+    "cramers_v": {
+      "category": {
+        "category": 1.0,
+        "assignment_group": 0.876,
+        "service": 0.939,
+        "impact": 0.322,
+        "urgency": 0.298,
+        "priority": 0.296
+      },
+      "assignment_group": {
+        "category": 0.876,
+        "assignment_group": 1.0,
+        "service": 0.825,
+        "impact": 0.261,
+        "urgency": 0.243,
+        "priority": 0.242
+      },
+      "service": {
+        "category": 0.939,
+        "assignment_group": 0.825,
+        "service": 1.0,
+        "impact": 0.298,
+        "urgency": 0.286,
+        "priority": 0.278
+      },
+      "impact": {
+        "category": 0.322,
+        "assignment_group": 0.261,
+        "service": 0.298,
+        "impact": 1.0,
+        "urgency": 0.244,
+        "priority": 0.648
+      },
+      "urgency": {
+        "category": 0.298,
+        "assignment_group": 0.243,
+        "service": 0.286,
+        "impact": 0.244,
+        "urgency": 1.0,
+        "priority": 0.618
+      },
+      "priority": {
+        "category": 0.296,
+        "assignment_group": 0.242,
+        "service": 0.278,
+        "impact": 0.648,
+        "urgency": 0.618,
+        "priority": 1.0
+      }
+    }
+  }
+}
