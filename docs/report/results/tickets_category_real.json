@@ -1,0 +1,1199 @@
+{
+  "experiment": "tickets_category_real",
+  "split": {
+    "strategy": "stratified-grouped (near-duplicate clusters kept together)",
+    "n_train": 1242,
+    "n_val": 380,
+    "n_test": 607
+  },
+  "n_classes": 7,
+  "seed": 42,
+  "baselines": {
+    "majority": {
+      "val_macro_f1": 0.09568480300187616,
+      "test": {
+        "n": 607,
+        "accuracy": 0.2504118616144975,
+        "macro": {
+          "precision": 0.04173531026908292,
+          "recall": 0.16666666666666666,
+          "f1": 0.06675450153711023
+        },
+        "weighted": {
+          "precision": 0.06270610043723826,
+          "recall": 0.2504118616144975,
+          "f1": 0.10029671400633366
+        },
+        "per_class": {
+          "Active Directory": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 26
+          },
+          "Computer-Services": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 21
+          },
+          "Fileservice": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 321
+          },
+          "O365": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 43
+          },
+          "Software": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 44
+          },
+          "Support general": {
+            "precision": 0.2504118616144975,
+            "recall": 1.0,
+            "f1": 0.4005270092226614,
+            "support": 152
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Active Directory",
+            "Computer-Services",
+            "Fileservice",
+            "O365",
+            "Software",
+            "Support general"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              26
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              21
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              321
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              43
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              44
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              152
+            ]
+          ]
+        }
+      }
+    },
+    "keyword": {
+      "val_macro_f1": 0.536832904671224,
+      "test": {
+        "n": 607,
+        "accuracy": 0.8484349258649094,
+        "macro": {
+          "precision": 0.6552948094185613,
+          "recall": 0.5340563513539559,
+          "f1": 0.5479428652094179
+        },
+        "weighted": {
+          "precision": 0.8586571870894139,
+          "recall": 0.8484349258649094,
+          "f1": 0.8300168132444004
+        },
+        "per_class": {
+          "Active Directory": {
+            "precision": 0.7272727272727273,
+            "recall": 0.3076923076923077,
+            "f1": 0.43243243243243246,
+            "support": 26
+          },
+          "Computer-Services": {
+            "precision": 0.6551724137931034,
+            "recall": 0.9047619047619048,
+            "f1": 0.76,
+            "support": 21
+          },
+          "EOL": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 0
+          },
+          "Fileservice": {
+            "precision": 0.9907407407407407,
+            "recall": 1.0,
+            "f1": 0.9953488372093023,
+            "support": 321
+          },
+          "O365": {
+            "precision": 0.8235294117647058,
+            "recall": 0.32558139534883723,
+            "f1": 0.4666666666666667,
+            "support": 43
+          },
+          "Software": {
+            "precision": 0.7058823529411765,
+            "recall": 0.2727272727272727,
+            "f1": 0.39344262295081966,
+            "support": 44
+          },
+          "Support general": {
+            "precision": 0.6844660194174758,
+            "recall": 0.9276315789473685,
+            "f1": 0.7877094972067039,
+            "support": 152
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Active Directory",
+            "Computer-Services",
+            "EOL",
+            "Fileservice",
+            "O365",
+            "Software",
+            "Support general"
+          ],
+          "matrix": [
+            [
+              8,
+              0,
+              1,
+              1,
+              0,
+              2,
+              14
+            ],
+            [
+              0,
+              19,
+              0,
+              0,
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              321,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              3,
+              1,
+              1,
+              14,
+              0,
+              24
+            ],
+            [
+              1,
+              5,
+              0,
+              0,
+              1,
+              12,
+              25
+            ],
+            [
+              2,
+              2,
+              1,
+              1,
+              2,
+              3,
+              141
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "models": {
+    "text/logreg": {
+      "feature_set": "text",
+      "algorithm": "logreg",
+      "categorical_columns": [],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.685141677733267,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7486684395575064,
+          "fit_s": 0.8
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.6438190824644133,
+          "fit_s": 0.3
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7448769595400565,
+          "fit_s": 1.0
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7737060608371523,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.835942476876542,
+          "fit_s": 1.3
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.7363411997132926,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8357422189299349,
+          "fit_s": 1.4
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.6672763325917175,
+          "fit_s": 0.4
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7253838387591687,
+          "fit_s": 1.7
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.6771908819858047,
+          "fit_s": 0.8
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7376382133626184,
+          "fit_s": 2.0
+        }
+      ],
+      "selected_params": {
+        "C": 1.0,
+        "ngram": 1,
+        "char": true
+      },
+      "val_macro_f1": 0.835942476876542,
+      "test": {
+        "n": 607,
+        "accuracy": 0.8879736408566722,
+        "macro": {
+          "precision": 0.7766328558086472,
+          "recall": 0.8425879506050866,
+          "f1": 0.7996337690588798
+        },
+        "weighted": {
+          "precision": 0.905305066755126,
+          "recall": 0.8879736408566722,
+          "f1": 0.8897394773331583
+        },
+        "per_class": {
+          "Active Directory": {
+            "precision": 0.6111111111111112,
+            "recall": 0.8461538461538461,
+            "f1": 0.7096774193548387,
+            "support": 26
+          },
+          "Computer-Services": {
+            "precision": 0.8181818181818182,
+            "recall": 0.8571428571428571,
+            "f1": 0.8372093023255814,
+            "support": 21
+          },
+          "Fileservice": {
+            "precision": 0.9876923076923076,
+            "recall": 1.0,
+            "f1": 0.9938080495356038,
+            "support": 321
+          },
+          "O365": {
+            "precision": 0.5932203389830508,
+            "recall": 0.813953488372093,
+            "f1": 0.6862745098039216,
+            "support": 43
+          },
+          "Software": {
+            "precision": 0.7115384615384616,
+            "recall": 0.8409090909090909,
+            "f1": 0.7708333333333334,
+            "support": 44
+          },
+          "Support general": {
+            "precision": 0.9380530973451328,
+            "recall": 0.6973684210526315,
+            "f1": 0.8,
+            "support": 152
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Active Directory",
+            "Computer-Services",
+            "Fileservice",
+            "O365",
+            "Software",
+            "Support general"
+          ],
+          "matrix": [
+            [
+              22,
+              0,
+              0,
+              1,
+              1,
+              2
+            ],
+            [
+              1,
+              18,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              321,
+              0,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              1,
+              35,
+              1,
+              4
+            ],
+            [
+              2,
+              0,
+              0,
+              4,
+              37,
+              1
+            ],
+            [
+              9,
+              4,
+              3,
+              17,
+              13,
+              106
+            ]
+          ]
+        }
+      }
+    },
+    "text/linsvm": {
+      "feature_set": "text",
+      "algorithm": "linsvm",
+      "categorical_columns": [],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7609116647195647,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.8162641608607153,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.720581455978313,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7985140368006555,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7996561332122427,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.805523187126152,
+          "fit_s": 0.8
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.776956860349428,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.820238231899657,
+          "fit_s": 0.9
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.5645911891205874,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.674175039899722,
+          "fit_s": 2.3
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.6749066966899978,
+          "fit_s": 0.4
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8093730581243775,
+          "fit_s": 2.7
+        }
+      ],
+      "selected_params": {
+        "C": 1.0,
+        "ngram": 2,
+        "char": true
+      },
+      "val_macro_f1": 0.820238231899657,
+      "test": {
+        "n": 607,
+        "accuracy": 0.9209225700164745,
+        "macro": {
+          "precision": 0.8641875004860559,
+          "recall": 0.8379489492555589,
+          "f1": 0.8492505234607547
+        },
+        "weighted": {
+          "precision": 0.9210947444131014,
+          "recall": 0.9209225700164745,
+          "f1": 0.920391580009711
+        },
+        "per_class": {
+          "Active Directory": {
+            "precision": 0.7391304347826086,
+            "recall": 0.6538461538461539,
+            "f1": 0.6938775510204082,
+            "support": 26
+          },
+          "Computer-Services": {
+            "precision": 1.0,
+            "recall": 0.8571428571428571,
+            "f1": 0.9230769230769231,
+            "support": 21
+          },
+          "Fileservice": {
+            "precision": 0.9786585365853658,
+            "recall": 1.0,
+            "f1": 0.9892141756548536,
+            "support": 321
+          },
+          "O365": {
+            "precision": 0.7291666666666666,
+            "recall": 0.813953488372093,
+            "f1": 0.7692307692307693,
+            "support": 43
+          },
+          "Software": {
+            "precision": 0.8409090909090909,
+            "recall": 0.8409090909090909,
+            "f1": 0.8409090909090909,
+            "support": 44
+          },
+          "Support general": {
+            "precision": 0.8972602739726028,
+            "recall": 0.8618421052631579,
+            "f1": 0.8791946308724832,
+            "support": 152
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Active Directory",
+            "Computer-Services",
+            "Fileservice",
+            "O365",
+            "Software",
+            "Support general"
+          ],
+          "matrix": [
+            [
+              17,
+              0,
+              1,
+              2,
+              1,
+              5
+            ],
+            [
+              1,
+              18,
+              0,
+              1,
+              0,
+              1
+            ],
+            [
+              0,
+              0,
+              321,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              2,
+              35,
+              0,
+              5
+            ],
+            [
+              1,
+              0,
+              0,
+              2,
+              37,
+              4
+            ],
+            [
+              3,
+              0,
+              4,
+              8,
+              6,
+              131
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "protocol": "tune on validation only; refit finalists on train+val; evaluate once on untouched test",
+  "selected_by_validation": "text/logreg",
+  "deploy_choice": "text/logreg",
+  "calibration": {
+    "method_selected_on_validation": "sigmoid",
+    "validation_ece_by_method": {
+      "sigmoid": 0.21971303616056773,
+      "isotonic": 0.23834704055988315
+    },
+    "calibrated_test": {
+      "ece_top_label": 0.17434407976636554,
+      "brier_multiclass": 0.19799619634107568,
+      "log_loss": 0.4440410882858096,
+      "mean_confidence": 0.721866793380257,
+      "accuracy": 0.8962108731466227,
+      "reliability_bins": [
+        {
+          "bin": "0.2-0.3",
+          "n": 4,
+          "confidence": 0.29004793700358167,
+          "accuracy": 0.75
+        },
+        {
+          "bin": "0.3-0.4",
+          "n": 29,
+          "confidence": 0.35102917804079675,
+          "accuracy": 0.41379310344827586
+        },
+        {
+          "bin": "0.4-0.5",
+          "n": 44,
+          "confidence": 0.4538696785721427,
+          "accuracy": 0.6136363636363636
+        },
+        {
+          "bin": "0.5-0.6",
+          "n": 60,
+          "confidence": 0.5465249913739904,
+          "accuracy": 0.6666666666666666
+        },
+        {
+          "bin": "0.6-0.7",
+          "n": 69,
+          "confidence": 0.6568527727075176,
+          "accuracy": 0.9420289855072463
+        },
+        {
+          "bin": "0.7-0.8",
+          "n": 61,
+          "confidence": 0.7559246229384672,
+          "accuracy": 0.9508196721311475
+        },
+        {
+          "bin": "0.8-0.9",
+          "n": 333,
+          "confidence": 0.8295920158671289,
+          "accuracy": 0.996996996996997
+        },
+        {
+          "bin": "0.9-1.0",
+          "n": 7,
+          "confidence": 0.9118508187408317,
+          "accuracy": 1.0
+        }
+      ]
+    },
+    "calibrated_macro_f1": 0.8010337215041746,
+    "note": "SVM margins are never reported as probabilities; probabilities come only from calibration.",
+    "uncalibrated_native_logreg_test": {
+      "ece_top_label": 0.10356073569512796,
+      "brier_multiclass": 0.19251389431927196,
+      "log_loss": 0.40483973299753334,
+      "mean_confidence": 0.7844129051615442,
+      "accuracy": 0.8879736408566722,
+      "reliability_bins": [
+        {
+          "bin": "0.1-0.2",
+          "n": 1,
+          "confidence": 0.19691020435291887,
+          "accuracy": 1.0
+        },
+        {
+          "bin": "0.2-0.3",
+          "n": 33,
+          "confidence": 0.25907478938323786,
+          "accuracy": 0.3939393939393939
+        },
+        {
+          "bin": "0.3-0.4",
+          "n": 46,
+          "confidence": 0.3485024074978429,
+          "accuracy": 0.6086956521739131
+        },
+        {
+          "bin": "0.4-0.5",
+          "n": 40,
+          "confidence": 0.45301855020577886,
+          "accuracy": 0.55
+        },
+        {
+          "bin": "0.5-0.6",
+          "n": 63,
+          "confidence": 0.5546782522357138,
+          "accuracy": 0.8888888888888888
+        },
+        {
+          "bin": "0.6-0.7",
+          "n": 28,
+          "confidence": 0.6437497783671499,
+          "accuracy": 0.8928571428571429
+        },
+        {
+          "bin": "0.7-0.8",
+          "n": 19,
+          "confidence": 0.74846456829336,
+          "accuracy": 0.8947368421052632
+        },
+        {
+          "bin": "0.8-0.9",
+          "n": 42,
+          "confidence": 0.8549432530428208,
+          "accuracy": 1.0
+        },
+        {
+          "bin": "0.9-1.0",
+          "n": 335,
+          "confidence": 0.9854992098967855,
+          "accuracy": 1.0
+        }
+      ]
+    },
+    "confidence_threshold_tradeoff": [
+      {
+        "threshold": 0.5,
+        "coverage": 0.8731466227347611,
+        "accuracy_on_covered": 0.9471698113207547
+      },
+      {
+        "threshold": 0.6,
+        "coverage": 0.7742998352553542,
+        "accuracy_on_covered": 0.9829787234042553
+      },
+      {
+        "threshold": 0.7,
+        "coverage": 0.6606260296540363,
+        "accuracy_on_covered": 0.9900249376558603
+      },
+      {
+        "threshold": 0.8,
+        "coverage": 0.5601317957166392,
+        "accuracy_on_covered": 0.9970588235294118
+      },
+      {
+        "threshold": 0.9,
+        "coverage": 0.011532125205930808,
+        "accuracy_on_covered": 1.0
+      }
+    ]
+  },
+  "dataset": {
+    "provenance": "real",
+    "fingerprint": "61a092bf2e15f5bf",
+    "rows": 2229,
+    "near_duplicate_clusters": 1299,
+    "rows_in_multi_row_clusters": 1035
+  },
+  "leakage_diagnostic_macro_f1": {
+    "grouped": 0.7359603351100089,
+    "naive_random": 0.7809857553161124
+  },
+  "global_top_features": {
+    "Active Directory": [
+      {
+        "feature": "ad",
+        "coef": 1.8921
+      },
+      {
+        "feature": "user",
+        "coef": 1.6617
+      },
+      {
+        "feature": "new",
+        "coef": 1.2268
+      },
+      {
+        "feature": "you",
+        "coef": 1.154
+      },
+      {
+        "feature": "acesso",
+        "coef": 1.1275
+      },
+      {
+        "feature": "account",
+        "coef": 1.0062
+      },
+      {
+        "feature": "conta",
+        "coef": 0.9782
+      },
+      {
+        "feature": "creaci\u00f3n",
+        "coef": 0.8915
+      },
+      {
+        "feature": "address",
+        "coef": 0.8744
+      },
+      {
+        "feature": "cancelamento",
+        "coef": 0.8711
+      }
+    ],
+    "Computer-Services": [
+      {
+        "feature": "printer",
+        "coef": 2.5769
+      },
+      {
+        "feature": "impressora",
+        "coef": 2.0532
+      },
+      {
+        "feature": "scanner",
+        "coef": 1.4415
+      },
+      {
+        "feature": " impr",
+        "coef": 1.3168
+      },
+      {
+        "feature": "impr",
+        "coef": 1.3168
+      },
+      {
+        "feature": "mpr",
+        "coef": 1.3079
+      },
+      {
+        "feature": "copier",
+        "coef": 1.2289
+      },
+      {
+        "feature": "pri",
+        "coef": 1.1605
+      },
+      {
+        "feature": " prin",
+        "coef": 1.1025
+      },
+      {
+        "feature": "impre",
+        "coef": 1.1007
+      }
+    ],
+    "EOL": [
+      {
+        "feature": "nexthink",
+        "coef": 1.1179
+      },
+      {
+        "feature": "reservations",
+        "coef": 0.966
+      },
+      {
+        "feature": "system",
+        "coef": 0.9421
+      },
+      {
+        "feature": "if",
+        "coef": 0.9235
+      },
+      {
+        "feature": "remove",
+        "coef": 0.8745
+      },
+      {
+        "feature": "and",
+        "coef": 0.8097
+      },
+      {
+        "feature": "the",
+        "coef": 0.7988
+      },
+      {
+        "feature": "life",
+        "coef": 0.7887
+      },
+      {
+        "feature": "end",
+        "coef": 0.785
+      },
+      {
+        "feature": "must",
+        "coef": 0.7835
+      }
+    ],
+    "Fileservice": [
+      {
+        "feature": "file",
+        "coef": 2.3893
+      },
+      {
+        "feature": "share",
+        "coef": 2.1394
+      },
+      {
+        "feature": "access",
+        "coef": 1.8839
+      },
+      {
+        "feature": "pasta",
+        "coef": 1.4832
+      },
+      {
+        "feature": "drive",
+        "coef": 1.3104
+      },
+      {
+        "feature": "folder",
+        "coef": 0.9627
+      },
+      {
+        "feature": "libera\u00e7\u00e3o",
+        "coef": 0.9332
+      },
+      {
+        "feature": "acesso",
+        "coef": 0.8611
+      },
+      {
+        "feature": " fil",
+        "coef": 0.8026
+      },
+      {
+        "feature": " file",
+        "coef": 0.8026
+      }
+    ],
+    "O365": [
+      {
+        "feature": "skype",
+        "coef": 2.9657
+      },
+      {
+        "feature": "outlook",
+        "coef": 1.3442
+      },
+      {
+        "feature": "email",
+        "coef": 1.0733
+      },
+      {
+        "feature": "onedrive",
+        "coef": 1.0601
+      },
+      {
+        "feature": "ms",
+        "coef": 1.0086
+      },
+      {
+        "feature": " sk",
+        "coef": 0.9865
+      },
+      {
+        "feature": "kyp",
+        "coef": 0.9393
+      },
+      {
+        "feature": "kype",
+        "coef": 0.9393
+      },
+      {
+        "feature": "sky",
+        "coef": 0.9393
+      },
+      {
+        "feature": "skyp",
+        "coef": 0.9393
+      }
+    ],
+    "Software": [
+      {
+        "feature": "okta",
+        "coef": 1.3905
+      },
+      {
+        "feature": "citrix",
+        "coef": 1.3453
+      },
+      {
+        "feature": "software",
+        "coef": 1.1334
+      },
+      {
+        "feature": "sharepoint",
+        "coef": 1.0755
+      },
+      {
+        "feature": "mcafee",
+        "coef": 1.0185
+      },
+      {
+        "feature": "app",
+        "coef": 0.8623
+      },
+      {
+        "feature": "missing",
+        "coef": 0.8138
+      },
+      {
+        "feature": "initiated",
+        "coef": 0.7799
+      },
+      {
+        "feature": "bartender",
+        "coef": 0.7739
+      },
+      {
+        "feature": "google",
+        "coef": 0.748
+      }
+    ],
+    "Support general": [
+      {
+        "feature": "basis",
+        "coef": 1.6289
+      },
+      {
+        "feature": "mailbox",
+        "coef": 1.5372
+      },
+      {
+        "feature": "shared",
+        "coef": 1.3554
+      },
+      {
+        "feature": "email",
+        "coef": 1.1694
+      },
+      {
+        "feature": "phone",
+        "coef": 0.978
+      },
+      {
+        "feature": "location",
+        "coef": 0.9116
+      },
+      {
+        "feature": "company",
+        "coef": 0.8114
+      },
+      {
+        "feature": "work",
+        "coef": 0.803
+      },
+      {
+        "feature": "vpn",
+        "coef": 0.7644
+      },
+      {
+        "feature": "username",
+        "coef": 0.7252
+      }
+    ]
+  }
+}

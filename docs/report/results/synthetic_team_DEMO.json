@@ -1,0 +1,1829 @@
+{
+  "experiment": "synthetic_team_DEMO",
+  "split": {
+    "strategy": "stratified-grouped (near-duplicate clusters kept together)",
+    "n_train": 1753,
+    "n_val": 647,
+    "n_test": 600
+  },
+  "n_classes": 5,
+  "seed": 42,
+  "baselines": {
+    "majority": {
+      "val_macro_f1": 0.09517078916372203,
+      "test": {
+        "n": 600,
+        "accuracy": 0.33,
+        "macro": {
+          "precision": 0.066,
+          "recall": 0.2,
+          "f1": 0.09924812030075188
+        },
+        "weighted": {
+          "precision": 0.10890000000000001,
+          "recall": 0.33,
+          "f1": 0.16375939849624058
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.33,
+            "recall": 1.0,
+            "f1": 0.49624060150375937,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              145
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              82
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              88
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              87
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              198
+            ]
+          ]
+        },
+        "topk": {
+          "1": null,
+          "3": null
+        },
+        "topk_note": "not computed: model exposes no valid scores/probabilities"
+      }
+    },
+    "keyword": {
+      "val_macro_f1": 0.39668586501856906,
+      "test": {
+        "n": 600,
+        "accuracy": 0.59,
+        "macro": {
+          "precision": 0.740439313772647,
+          "recall": 0.5353759206871066,
+          "f1": 0.5451221344602042
+        },
+        "weighted": {
+          "precision": 0.6762013521457967,
+          "recall": 0.59,
+          "f1": 0.5589902992059699
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.4382716049382716,
+            "recall": 0.4896551724137931,
+            "f1": 0.46254071661237783,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.8833333333333333,
+            "recall": 0.6463414634146342,
+            "f1": 0.7464788732394366,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 1.0,
+            "recall": 0.07954545454545454,
+            "f1": 0.14736842105263157,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.8253968253968254,
+            "recall": 0.5977011494252874,
+            "f1": 0.6933333333333334,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.5551948051948052,
+            "recall": 0.8636363636363636,
+            "f1": 0.6758893280632411,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              71,
+              7,
+              0,
+              0,
+              67
+            ],
+            [
+              1,
+              53,
+              0,
+              0,
+              28
+            ],
+            [
+              73,
+              0,
+              7,
+              0,
+              8
+            ],
+            [
+              1,
+              0,
+              0,
+              52,
+              34
+            ],
+            [
+              16,
+              0,
+              0,
+              11,
+              171
+            ]
+          ]
+        },
+        "topk": {
+          "1": null,
+          "3": null
+        },
+        "topk_note": "not computed: model exposes no valid scores/probabilities"
+      }
+    },
+    "category_map": {
+      "val_macro_f1": 0.8786267641203842,
+      "test": {
+        "n": 600,
+        "accuracy": 0.8883333333333333,
+        "macro": {
+          "precision": 0.8889028621794124,
+          "recall": 0.9008307210031348,
+          "f1": 0.8940107123230933
+        },
+        "weighted": {
+          "precision": 0.8878688045616316,
+          "recall": 0.8883333333333333,
+          "f1": 0.8872415528828003
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.8947368421052632,
+            "recall": 0.9379310344827586,
+            "f1": 0.9158249158249159,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.9010989010989011,
+            "recall": 1.0,
+            "f1": 0.9479768786127167,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.9310344827586207,
+            "recall": 0.9204545454545454,
+            "f1": 0.9257142857142857,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.8372093023255814,
+            "recall": 0.8275862068965517,
+            "f1": 0.8323699421965318,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.8804347826086957,
+            "recall": 0.8181818181818182,
+            "f1": 0.8481675392670157,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              136,
+              9,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              81,
+              0,
+              7
+            ],
+            [
+              0,
+              0,
+              0,
+              72,
+              15
+            ],
+            [
+              16,
+              0,
+              6,
+              14,
+              162
+            ]
+          ]
+        },
+        "topk": {
+          "1": 0.8883333333333333,
+          "3": 1.0
+        }
+      }
+    }
+  },
+  "models": {
+    "text/logreg": {
+      "feature_set": "text",
+      "algorithm": "logreg",
+      "categorical_columns": [],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.6697212181592699,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7213814654761866,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.6616409270631729,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.6875065253263714,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7621598091330627,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7850062381318739,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.7007468628871834,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7804535897781057,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7630648883622422,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7920963055951087,
+          "fit_s": 0.8
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.7747700714909092,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7995138087026179,
+          "fit_s": 0.8
+        }
+      ],
+      "selected_params": {
+        "C": 10.0,
+        "ngram": 2,
+        "char": true
+      },
+      "val_macro_f1": 0.7995138087026179,
+      "test": {
+        "n": 600,
+        "accuracy": 0.7683333333333333,
+        "macro": {
+          "precision": 0.7825267267381325,
+          "recall": 0.797138627655869,
+          "f1": 0.7829021386665016
+        },
+        "weighted": {
+          "precision": 0.7956242024948436,
+          "recall": 0.7683333333333333,
+          "f1": 0.7752549455496207
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.7709923664122137,
+            "recall": 0.696551724137931,
+            "f1": 0.7318840579710145,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.9010989010989011,
+            "recall": 1.0,
+            "f1": 0.9479768786127167,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.9310344827586207,
+            "recall": 0.9204545454545454,
+            "f1": 0.9257142857142857,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.4461538461538462,
+            "recall": 0.6666666666666666,
+            "f1": 0.5345622119815668,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.8633540372670807,
+            "recall": 0.702020202020202,
+            "f1": 0.7743732590529248,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              101,
+              9,
+              0,
+              33,
+              2
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              81,
+              0,
+              7
+            ],
+            [
+              16,
+              0,
+              0,
+              58,
+              13
+            ],
+            [
+              14,
+              0,
+              6,
+              39,
+              139
+            ]
+          ]
+        },
+        "topk": {
+          "1": 0.7683333333333333,
+          "3": 1.0
+        }
+      }
+    },
+    "text/linsvm": {
+      "feature_set": "text",
+      "algorithm": "linsvm",
+      "categorical_columns": [],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7793521708602081,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.790030695680997,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.7353596707689567,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7944637346139487,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7882607017146497,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.790030695680997,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.790030695680997,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.795589036707636,
+          "fit_s": 0.8
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7329468696869904,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7920623212274644,
+          "fit_s": 3.0
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.7920623212274644,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7639093883417953,
+          "fit_s": 3.6
+        }
+      ],
+      "selected_params": {
+        "C": 1.0,
+        "ngram": 2,
+        "char": true
+      },
+      "val_macro_f1": 0.795589036707636,
+      "test": {
+        "n": 600,
+        "accuracy": 0.76,
+        "macro": {
+          "precision": 0.7805172363848824,
+          "recall": 0.7933768721699755,
+          "f1": 0.7775398232206653
+        },
+        "weighted": {
+          "precision": 0.7963218250943271,
+          "recall": 0.76,
+          "f1": 0.7687082139265982
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.7709923664122137,
+            "recall": 0.696551724137931,
+            "f1": 0.7318840579710145,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.9010989010989011,
+            "recall": 1.0,
+            "f1": 0.9479768786127167,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.9310344827586207,
+            "recall": 0.9204545454545454,
+            "f1": 0.9257142857142857,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.4244604316546763,
+            "recall": 0.6781609195402298,
+            "f1": 0.5221238938053098,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.875,
+            "recall": 0.6717171717171717,
+            "f1": 0.76,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              101,
+              9,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              81,
+              0,
+              7
+            ],
+            [
+              16,
+              0,
+              0,
+              59,
+              12
+            ],
+            [
+              14,
+              0,
+              6,
+              45,
+              133
+            ]
+          ]
+        },
+        "topk": {
+          "1": 0.76,
+          "3": 0.9916666666666667
+        }
+      }
+    },
+    "structured/logreg": {
+      "feature_set": "structured",
+      "algorithm": "logreg",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1
+          },
+          "val_macro_f1": 0.8142218289280694,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0
+          },
+          "val_macro_f1": 0.8053648838222477,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0
+          },
+          "val_macro_f1": 0.803993736445762,
+          "fit_s": 0.1
+        }
+      ],
+      "selected_params": {
+        "C": 0.1
+      },
+      "val_macro_f1": 0.8142218289280694,
+      "test": {
+        "n": 600,
+        "accuracy": 0.8066666666666666,
+        "macro": {
+          "precision": 0.81789712705293,
+          "recall": 0.8409979101358411,
+          "f1": 0.821499990088751
+        },
+        "weighted": {
+          "precision": 0.8276353617909283,
+          "recall": 0.8066666666666666,
+          "f1": 0.8098300812183931
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.84375,
+            "recall": 0.7448275862068966,
+            "f1": 0.7912087912087912,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.9010989010989011,
+            "recall": 1.0,
+            "f1": 0.9479768786127167,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.9310344827586207,
+            "recall": 0.9204545454545454,
+            "f1": 0.9257142857142857,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.5538461538461539,
+            "recall": 0.8275862068965517,
+            "f1": 0.663594470046083,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.8597560975609756,
+            "recall": 0.7121212121212122,
+            "f1": 0.7790055248618785,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              108,
+              9,
+              0,
+              25,
+              3
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              81,
+              0,
+              7
+            ],
+            [
+              2,
+              0,
+              0,
+              72,
+              13
+            ],
+            [
+              18,
+              0,
+              6,
+              33,
+              141
+            ]
+          ]
+        },
+        "topk": {
+          "1": 0.8066666666666666,
+          "3": 0.995
+        }
+      }
+    },
+    "structured/linsvm": {
+      "feature_set": "structured",
+      "algorithm": "linsvm",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1
+          },
+          "val_macro_f1": 0.8015653303503101,
+          "fit_s": 0.0
+        },
+        {
+          "params": {
+            "C": 1.0
+          },
+          "val_macro_f1": 0.8015653303503101,
+          "fit_s": 0.0
+        },
+        {
+          "params": {
+            "C": 10.0
+          },
+          "val_macro_f1": 0.8015653303503101,
+          "fit_s": 0.1
+        }
+      ],
+      "selected_params": {
+        "C": 0.1
+      },
+      "val_macro_f1": 0.8015653303503101,
+      "test": {
+        "n": 600,
+        "accuracy": 0.7866666666666666,
+        "macro": {
+          "precision": 0.8167852229951367,
+          "recall": 0.8314472309299896,
+          "f1": 0.8066287538556145
+        },
+        "weighted": {
+          "precision": 0.8354130332412505,
+          "recall": 0.7866666666666666,
+          "f1": 0.7944784784745756
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.8938053097345132,
+            "recall": 0.696551724137931,
+            "f1": 0.7829457364341085,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.9010989010989011,
+            "recall": 1.0,
+            "f1": 0.9479768786127167,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.9310344827586207,
+            "recall": 0.9204545454545454,
+            "f1": 0.9257142857142857,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.4779874213836478,
+            "recall": 0.8735632183908046,
+            "f1": 0.6178861788617886,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.88,
+            "recall": 0.6666666666666666,
+            "f1": 0.7586206896551724,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              101,
+              9,
+              0,
+              35,
+              0
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              81,
+              0,
+              7
+            ],
+            [
+              0,
+              0,
+              0,
+              76,
+              11
+            ],
+            [
+              12,
+              0,
+              6,
+              48,
+              132
+            ]
+          ]
+        },
+        "topk": {
+          "1": 0.7866666666666666,
+          "3": 0.995
+        }
+      }
+    },
+    "combined/logreg": {
+      "feature_set": "combined",
+      "algorithm": "logreg",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.8108659835620277,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.8095522142220861,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.8112194027864827,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8095522142220861,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7978857754038629,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7992220787362555,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.8033534346567531,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8011590861994093,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7678371387706504,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7883143674930536,
+          "fit_s": 0.9
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.8041094695718192,
+          "fit_s": 0.3
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8001316030768659,
+          "fit_s": 1.0
+        }
+      ],
+      "selected_params": {
+        "C": 0.1,
+        "ngram": 2,
+        "char": false
+      },
+      "val_macro_f1": 0.8112194027864827,
+      "test": {
+        "n": 600,
+        "accuracy": 0.8133333333333334,
+        "macro": {
+          "precision": 0.8191183450476354,
+          "recall": 0.8395141065830721,
+          "f1": 0.8251705458590853
+        },
+        "weighted": {
+          "precision": 0.823983121745775,
+          "recall": 0.8133333333333334,
+          "f1": 0.8149968620026327
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.8294573643410853,
+            "recall": 0.7379310344827587,
+            "f1": 0.781021897810219,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.9010989010989011,
+            "recall": 1.0,
+            "f1": 0.9479768786127167,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.9310344827586207,
+            "recall": 0.9204545454545454,
+            "f1": 0.9257142857142857,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.591304347826087,
+            "recall": 0.7816091954022989,
+            "f1": 0.6732673267326733,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.8426966292134831,
+            "recall": 0.7575757575757576,
+            "f1": 0.7978723404255319,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              107,
+              9,
+              0,
+              22,
+              7
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              81,
+              0,
+              7
+            ],
+            [
+              5,
+              0,
+              0,
+              68,
+              14
+            ],
+            [
+              17,
+              0,
+              6,
+              25,
+              150
+            ]
+          ]
+        },
+        "topk": {
+          "1": 0.8133333333333334,
+          "3": 0.9983333333333333
+        }
+      }
+    },
+    "combined/linsvm": {
+      "feature_set": "combined",
+      "algorithm": "linsvm",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.80143814521825,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.80143814521825,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.8015653303503101,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8015653303503101,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7974537894150375,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.8001079976260851,
+          "fit_s": 0.8
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.8015653303503101,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8017867475043801,
+          "fit_s": 0.9
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.7099985747403842,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.7914967601016439,
+          "fit_s": 4.5
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.7719270500478224,
+          "fit_s": 0.4
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.7724995428972681,
+          "fit_s": 4.7
+        }
+      ],
+      "selected_params": {
+        "C": 1.0,
+        "ngram": 2,
+        "char": true
+      },
+      "val_macro_f1": 0.8017867475043801,
+      "test": {
+        "n": 600,
+        "accuracy": 0.78,
+        "macro": {
+          "precision": 0.7888797490215707,
+          "recall": 0.8058742598397771,
+          "f1": 0.7958517448443289
+        },
+        "weighted": {
+          "precision": 0.7830749507747697,
+          "recall": 0.78,
+          "f1": 0.7801795480306533
+        },
+        "per_class": {
+          "Application Support": {
+            "precision": 0.7841726618705036,
+            "recall": 0.7517241379310344,
+            "f1": 0.7676056338028169,
+            "support": 145
+          },
+          "Database Administration": {
+            "precision": 0.9010989010989011,
+            "recall": 1.0,
+            "f1": 0.9479768786127167,
+            "support": 82
+          },
+          "Network Operations": {
+            "precision": 0.9310344827586207,
+            "recall": 0.9204545454545454,
+            "f1": 0.9257142857142857,
+            "support": 88
+          },
+          "Security Operations": {
+            "precision": 0.5643564356435643,
+            "recall": 0.6551724137931034,
+            "f1": 0.6063829787234043,
+            "support": 87
+          },
+          "Service Desk": {
+            "precision": 0.7637362637362637,
+            "recall": 0.702020202020202,
+            "f1": 0.7315789473684211,
+            "support": 198
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Application Support",
+            "Database Administration",
+            "Network Operations",
+            "Security Operations",
+            "Service Desk"
+          ],
+          "matrix": [
+            [
+              109,
+              9,
+              0,
+              5,
+              22
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              81,
+              0,
+              7
+            ],
+            [
+              16,
+              0,
+              0,
+              57,
+              14
+            ],
+            [
+              14,
+              0,
+              6,
+              39,
+              139
+            ]
+          ]
+        },
+        "topk": {
+          "1": 0.78,
+          "3": 0.9983333333333333
+        }
+      }
+    }
+  },
+  "protocol": "tune on validation only; refit finalists on train+val; evaluate once on untouched test",
+  "selected_by_validation": "structured/logreg",
+  "deploy_choice": "text/logreg",
+  "calibration": {
+    "method_selected_on_validation": "isotonic",
+    "validation_ece_by_method": {
+      "sigmoid": 0.13679981880799325,
+      "isotonic": 0.11027377580689086
+    },
+    "calibrated_test": {
+      "ece_top_label": 0.0995515352173559,
+      "brier_multiclass": 0.32525187551486756,
+      "log_loss": 0.6958670534590354,
+      "mean_confidence": 0.7689482122833776,
+      "accuracy": 0.7666666666666667,
+      "reliability_bins": [
+        {
+          "bin": "0.3-0.4",
+          "n": 7,
+          "confidence": 0.3749151629098977,
+          "accuracy": 0.14285714285714285
+        },
+        {
+          "bin": "0.4-0.5",
+          "n": 12,
+          "confidence": 0.43552457887351487,
+          "accuracy": 0.16666666666666666
+        },
+        {
+          "bin": "0.5-0.6",
+          "n": 46,
+          "confidence": 0.5542056784207163,
+          "accuracy": 0.06521739130434782
+        },
+        {
+          "bin": "0.6-0.7",
+          "n": 96,
+          "confidence": 0.6487470625995028,
+          "accuracy": 0.6666666666666666
+        },
+        {
+          "bin": "0.7-0.8",
+          "n": 122,
+          "confidence": 0.7622641994773621,
+          "accuracy": 0.8934426229508197
+        },
+        {
+          "bin": "0.8-0.9",
+          "n": 277,
+          "confidence": 0.8539460388953649,
+          "accuracy": 0.8953068592057761
+        },
+        {
+          "bin": "0.9-1.0",
+          "n": 40,
+          "confidence": 0.9051440489003916,
+          "accuracy": 0.825
+        }
+      ]
+    },
+    "calibrated_macro_f1": 0.7811150444596033,
+    "note": "SVM margins are never reported as probabilities; probabilities come only from calibration.",
+    "uncalibrated_native_logreg_test": {
+      "ece_top_label": 0.1079552597668427,
+      "brier_multiclass": 0.33690709236410865,
+      "log_loss": 0.7294166532768399,
+      "mean_confidence": 0.8762885931001759,
+      "accuracy": 0.7683333333333333,
+      "reliability_bins": [
+        {
+          "bin": "0.4-0.5",
+          "n": 13,
+          "confidence": 0.47574428723992074,
+          "accuracy": 0.15384615384615385
+        },
+        {
+          "bin": "0.5-0.6",
+          "n": 33,
+          "confidence": 0.5546855676076294,
+          "accuracy": 0.06060606060606061
+        },
+        {
+          "bin": "0.6-0.7",
+          "n": 21,
+          "confidence": 0.6241512689225099,
+          "accuracy": 0.38095238095238093
+        },
+        {
+          "bin": "0.7-0.8",
+          "n": 50,
+          "confidence": 0.7636945016980373,
+          "accuracy": 0.72
+        },
+        {
+          "bin": "0.8-0.9",
+          "n": 167,
+          "confidence": 0.8602785584369078,
+          "accuracy": 0.8023952095808383
+        },
+        {
+          "bin": "0.9-1.0",
+          "n": 316,
+          "confidence": 0.9693842892522048,
+          "accuracy": 0.8829113924050633
+        }
+      ]
+    },
+    "confidence_threshold_tradeoff": [
+      {
+        "threshold": 0.5,
+        "coverage": 0.9683333333333334,
+        "accuracy_on_covered": 0.7865748709122203
+      },
+      {
+        "threshold": 0.6,
+        "coverage": 0.8916666666666667,
+        "accuracy_on_covered": 0.8485981308411215
+      },
+      {
+        "threshold": 0.7,
+        "coverage": 0.7316666666666667,
+        "accuracy_on_covered": 0.8883826879271071
+      },
+      {
+        "threshold": 0.8,
+        "coverage": 0.5283333333333333,
+        "accuracy_on_covered": 0.886435331230284
+      },
+      {
+        "threshold": 0.9,
+        "coverage": 0.06666666666666667,
+        "accuracy_on_covered": 0.825
+      }
+    ]
+  },
+  "dataset": {
+    "provenance": "synthetic-demo",
+    "fingerprint": "728207b4fc738158",
+    "rows": 3000,
+    "warning": "SYNTHETIC demo data: results are not evidence of real-world performance"
+  },
+  "permutation_importance_combined_logreg": [
+    {
+      "column": "service",
+      "importance_mean": 0.6004281450428561,
+      "importance_std": 0.014492742609184445
+    },
+    {
+      "column": "impact",
+      "importance_mean": 0.023898933304310123,
+      "importance_std": 0.0052284950877982675
+    },
+    {
+      "column": "urgency",
+      "importance_mean": 0.008810391484733171,
+      "importance_std": 0.0047785915694367005
+    },
+    {
+      "column": "text",
+      "importance_mean": 0.0014328351749425706,
+      "importance_std": 0.003591920157519938
+    }
+  ],
+  "global_top_features": {
+    "Application Support": [
+      {
+        "feature": "crm",
+        "coef": 4.4669
+      },
+      {
+        "feature": "erp",
+        "coef": 4.366
+      },
+      {
+        "feature": "in email",
+        "coef": 2.941
+      },
+      {
+        "feature": "my erp",
+        "coef": 2.4846
+      },
+      {
+        "feature": "intranet",
+        "coef": 2.4684
+      },
+      {
+        "feature": "email returns",
+        "coef": 2.2772
+      },
+      {
+        "feature": "crm",
+        "coef": 2.0325
+      },
+      {
+        "feature": " crm",
+        "coef": 2.0325
+      },
+      {
+        "feature": "crm multi",
+        "coef": 1.9517
+      },
+      {
+        "feature": "erp",
+        "coef": 1.8352
+      }
+    ],
+    "Database Administration": [
+      {
+        "feature": "db",
+        "coef": 6.5825
+      },
+      {
+        "feature": "erp db",
+        "coef": 5.8927
+      },
+      {
+        "feature": " db",
+        "coef": 3.1634
+      },
+      {
+        "feature": "data warehouse",
+        "coef": 2.9731
+      },
+      {
+        "feature": "warehouse",
+        "coef": 2.9731
+      },
+      {
+        "feature": "erp",
+        "coef": 2.4658
+      },
+      {
+        "feature": " db ",
+        "coef": 2.1799
+      },
+      {
+        "feature": "db ",
+        "coef": 2.1799
+      },
+      {
+        "feature": "reporting db",
+        "coef": 2.0682
+      },
+      {
+        "feature": "reporting",
+        "coef": 2.0682
+      }
+    ],
+    "Network Operations": [
+      {
+        "feature": "lan",
+        "coef": 4.5837
+      },
+      {
+        "feature": "dns",
+        "coef": 4.2942
+      },
+      {
+        "feature": "vpn",
+        "coef": 3.837
+      },
+      {
+        "feature": "wifi",
+        "coef": 3.5074
+      },
+      {
+        "feature": " lan",
+        "coef": 2.0649
+      },
+      {
+        "feature": "lan",
+        "coef": 2.0649
+      },
+      {
+        "feature": "dns",
+        "coef": 2.061
+      },
+      {
+        "feature": " dns",
+        "coef": 2.061
+      },
+      {
+        "feature": " dn",
+        "coef": 2.061
+      },
+      {
+        "feature": "laptop multi",
+        "coef": 2.0209
+      }
+    ],
+    "Security Operations": [
+      {
+        "feature": "email",
+        "coef": 3.5013
+      },
+      {
+        "feature": "firewall",
+        "coef": 3.4537
+      },
+      {
+        "feature": "data email",
+        "coef": 2.8583
+      },
+      {
+        "feature": "email protected",
+        "coef": 2.8583
+      },
+      {
+        "feature": "sso",
+        "coef": 2.5141
+      },
+      {
+        "feature": "on email",
+        "coef": 2.4768
+      },
+      {
+        "feature": "sso returns",
+        "coef": 2.0806
+      },
+      {
+        "feature": "ire",
+        "coef": 1.9181
+      },
+      {
+        "feature": "email is",
+        "coef": 1.8226
+      },
+      {
+        "feature": "sso no",
+        "coef": 1.7726
+      }
+    ],
+    "Service Desk": [
+      {
+        "feature": "sso",
+        "coef": 2.4228
+      },
+      {
+        "feature": "email account",
+        "coef": 2.3393
+      },
+      {
+        "feature": "on firewall",
+        "coef": 1.9308
+      },
+      {
+        "feature": "by endpoint",
+        "coef": 1.7465
+      },
+      {
+        "feature": "email forgot",
+        "coef": 1.7432
+      },
+      {
+        "feature": "the sso",
+        "coef": 1.7356
+      },
+      {
+        "feature": "laptop",
+        "coef": 1.7326
+      },
+      {
+        "feature": "printer",
+        "coef": 1.7298
+      },
+      {
+        "feature": "my email",
+        "coef": 1.6945
+      },
+      {
+        "feature": "sso multi",
+        "coef": 1.671
+      }
+    ]
+  }
+}

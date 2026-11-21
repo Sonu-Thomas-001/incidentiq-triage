@@ -67,7 +67,13 @@ def _corr_heatmap(df: pd.DataFrame, cols: list[str], title: str, name: str) -> d
 
 def eda_tickets(df: pd.DataFrame) -> dict:
     out: dict = {"figures": []}
-    out["figures"].append(_bar(df["category"].value_counts(), "Tickets: category distribution (real)", "tickets_class_dist"))
+    out["figures"].append(
+        _bar(
+            df["category"].value_counts(),
+            "Tickets: category distribution (real)",
+            "tickets_class_dist",
+        )
+    )
     fig, ax = plt.subplots(figsize=(7, 4))
     ax.hist(df["description"].str.len().clip(upper=600), bins=50)
     ax.set_title("Tickets: text length (chars, clipped at 600; real)")
@@ -76,7 +82,9 @@ def eda_tickets(df: pd.DataFrame) -> dict:
     tr, te = df[df.author_split == "train"], df[df.author_split == "test"]
     n_tr = set(tr["description"].map(normalize_text))
     out["test_texts_also_in_train_exact"] = round(float(te["description"].isin(set(tr["description"])).mean()), 4)
-    out["test_texts_also_in_train_normalized"] = round(float(te["description"].map(normalize_text).isin(n_tr).mean()), 4)
+    out["test_texts_also_in_train_normalized"] = round(
+        float(te["description"].map(normalize_text).isin(n_tr).mean()), 4
+    )
     out["note"] = "No timestamps, teams, priority or impact exist in this dataset."
     return out
 
@@ -84,8 +92,21 @@ def eda_tickets(df: pd.DataFrame) -> dict:
 def eda_uci(df: pd.DataFrame) -> dict:
     out: dict = {"figures": []}
     g = df["assignment_group"].value_counts()
-    out["figures"].append(_bar(g, "UCI: incidents per first-event assignment group (top 30, log; real)", "uci_group_dist", log=True))
-    out["figures"].append(_bar(df["category"].value_counts(), "UCI: category distribution (top 30; real)", "uci_category_dist"))
+    out["figures"].append(
+        _bar(
+            g,
+            "UCI: incidents per first-event assignment group (top 30, log; real)",
+            "uci_group_dist",
+            log=True,
+        )
+    )
+    out["figures"].append(
+        _bar(
+            df["category"].value_counts(),
+            "UCI: category distribution (top 30; real)",
+            "uci_category_dist",
+        )
+    )
     weekly = df.set_index("created_at").resample("W").size()
     fig, ax = plt.subplots(figsize=(8, 3.5))
     weekly.plot(ax=ax)
@@ -95,7 +116,16 @@ def eda_uci(df: pd.DataFrame) -> dict:
     out["group_top1_share"] = round(float(g.iloc[0] / g.sum()), 4)
     out["groups_with_lt_30_incidents"] = int((g < 30).sum())
     out["first_vs_final_group_agree"] = round(float((df["assignment_group"] == df["final_assignment_group"]).mean()), 4)
-    cols = ["impact", "urgency", "priority", "category", "subcategory", "location", "contact_type", "assignment_group"]
+    cols = [
+        "impact",
+        "urgency",
+        "priority",
+        "category",
+        "subcategory",
+        "location",
+        "contact_type",
+        "assignment_group",
+    ]
     tmp = df.copy()
     tmp[["impact", "urgency"]] = tmp[["impact", "urgency"]].astype("object")
     out["cramers_v"] = _corr_heatmap(tmp, cols, "UCI: association between fields (real)", "uci_cramers_v")
@@ -105,7 +135,13 @@ def eda_uci(df: pd.DataFrame) -> dict:
 
 def eda_synthetic(df: pd.DataFrame) -> dict:
     out: dict = {"figures": [], "warning": "SYNTHETIC demo data"}
-    out["figures"].append(_bar(df["assignment_group"].value_counts(), "SYNTHETIC: team distribution", "synthetic_team_dist"))
+    out["figures"].append(
+        _bar(
+            df["assignment_group"].value_counts(),
+            "SYNTHETIC: team distribution",
+            "synthetic_team_dist",
+        )
+    )
     weekly = df.set_index("created_at").resample("W").size()
     fig, ax = plt.subplots(figsize=(8, 3.5))
     weekly.plot(ax=ax)

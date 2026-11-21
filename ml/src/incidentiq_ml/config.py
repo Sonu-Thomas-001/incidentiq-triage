@@ -26,10 +26,7 @@ ZENODO_FILES = {
     "y_train.csv": "CB851FF4D5E792886504B3040BCC85A5DBF94514D31293EDDD6D69FCB7278D53",
     "y_test.csv": "2B10DB5E2F071E649EFB3D40DD007EC62BC661F35B4AFAF44117A00865760F94",
 }
-UCI_URL = (
-    "https://archive.ics.uci.edu/static/public/498/"
-    "incident+management+process+enriched+event+log.zip"
-)
+UCI_URL = "https://archive.ics.uci.edu/static/public/498/" "incident+management+process+enriched+event+log.zip"
 UCI_ZIP_SHA256 = "6294E29A311647306BFDFC85783F7DF66517C197B9CD49AA5EE36BA9C525D1D6"
 UCI_CSV_SHA256 = "FD184BBFD62329CFE093E99DA2EA7071905F2EAD91900B448EB2635870821BEF"
 
@@ -112,7 +109,14 @@ UCI_LEAKAGE_COLUMNS = [
 ]  # fmt: skip
 
 # Predictors allowed at ticket-opening time on UCI.
-UCI_STRUCTURED_FEATURES = ["contact_type", "location", "subcategory", "u_symptom", "impact", "urgency"]
+UCI_STRUCTURED_FEATURES = [
+    "contact_type",
+    "location",
+    "subcategory",
+    "u_symptom",
+    "impact",
+    "urgency",
+]
 
 # Fields derived from the target; excluded for the task they leak.
 TARGET_DERIVED = {

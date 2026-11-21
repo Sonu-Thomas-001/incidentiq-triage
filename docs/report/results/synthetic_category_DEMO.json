@@ -1,0 +1,1489 @@
+{
+  "experiment": "synthetic_category_DEMO",
+  "split": {
+    "strategy": "stratified-grouped (near-duplicate clusters kept together)",
+    "n_train": 1846,
+    "n_val": 561,
+    "n_test": 593
+  },
+  "n_classes": 6,
+  "seed": 42,
+  "baselines": {
+    "majority": {
+      "val_macro_f1": 0.05170682730923695,
+      "test": {
+        "n": 593,
+        "accuracy": 0.1399662731871838,
+        "macro": {
+          "precision": 0.023327712197863965,
+          "recall": 0.16666666666666666,
+          "f1": 0.040927021696252466
+        },
+        "weighted": {
+          "precision": 0.019590557629909366,
+          "recall": 0.1399662731871838,
+          "f1": 0.034370416196852834
+        },
+        "per_class": {
+          "Access": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 112
+          },
+          "Application": {
+            "precision": 0.1399662731871838,
+            "recall": 1.0,
+            "f1": 0.2455621301775148,
+            "support": 83
+          },
+          "Database": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 134
+          },
+          "Network": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 91
+          },
+          "Security": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              0,
+              112,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              83,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              82,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              134,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              91,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              91,
+              0,
+              0,
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "keyword": {
+      "val_macro_f1": 0.40284603652561285,
+      "test": {
+        "n": 593,
+        "accuracy": 0.7015177065767285,
+        "macro": {
+          "precision": 0.7769947372888549,
+          "recall": 0.7025943404865537,
+          "f1": 0.7195779619638693
+        },
+        "weighted": {
+          "precision": 0.7681423113473506,
+          "recall": 0.7015177065767285,
+          "f1": 0.7156069922415744
+        },
+        "per_class": {
+          "Access": {
+            "precision": 1.0,
+            "recall": 0.6964285714285714,
+            "f1": 0.8210526315789474,
+            "support": 112
+          },
+          "Application": {
+            "precision": 0.39285714285714285,
+            "recall": 0.5301204819277109,
+            "f1": 0.4512820512820513,
+            "support": 83
+          },
+          "Database": {
+            "precision": 1.0,
+            "recall": 0.6219512195121951,
+            "f1": 0.7669172932330827,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 0.5212121212121212,
+            "recall": 0.6417910447761194,
+            "f1": 0.5752508361204013,
+            "support": 134
+          },
+          "Network": {
+            "precision": 0.7478991596638656,
+            "recall": 0.978021978021978,
+            "f1": 0.8476190476190476,
+            "support": 91
+          },
+          "Security": {
+            "precision": 1.0,
+            "recall": 0.7472527472527473,
+            "f1": 0.8553459119496856,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              78,
+              0,
+              0,
+              34,
+              0,
+              0
+            ],
+            [
+              0,
+              44,
+              0,
+              39,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              51,
+              3,
+              28,
+              0
+            ],
+            [
+              0,
+              48,
+              0,
+              86,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              2,
+              89,
+              0
+            ],
+            [
+              0,
+              20,
+              0,
+              1,
+              2,
+              68
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "models": {
+    "text/logreg": {
+      "feature_set": "text",
+      "algorithm": "logreg",
+      "categorical_columns": [],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.8337242912729294,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.8436792607714936,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.8036798022615148,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8397736693007967,
+          "fit_s": 1.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.90328326873385,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.9028739177210298,
+          "fit_s": 0.8
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9009763626588975,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9028739177210298,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.8969547744382181,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.8929994097052596,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9379569622315302,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.8929994097052596,
+          "fit_s": 0.7
+        }
+      ],
+      "selected_params": {
+        "C": 10.0,
+        "ngram": 2,
+        "char": false
+      },
+      "val_macro_f1": 0.9379569622315302,
+      "test": {
+        "n": 593,
+        "accuracy": 0.9190556492411467,
+        "macro": {
+          "precision": 0.9193743363554686,
+          "recall": 0.9169659406858202,
+          "f1": 0.9162990999360066
+        },
+        "weighted": {
+          "precision": 0.9199017947275926,
+          "recall": 0.9190556492411467,
+          "f1": 0.9178332342222598
+        },
+        "per_class": {
+          "Access": {
+            "precision": 0.7909090909090909,
+            "recall": 0.7767857142857143,
+            "f1": 0.7837837837837838,
+            "support": 112
+          },
+          "Application": {
+            "precision": 0.8857142857142857,
+            "recall": 0.7469879518072289,
+            "f1": 0.8104575163398693,
+            "support": 83
+          },
+          "Database": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 134
+          },
+          "Network": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 91
+          },
+          "Security": {
+            "precision": 0.839622641509434,
+            "recall": 0.978021978021978,
+            "f1": 0.9035532994923858,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              87,
+              8,
+              0,
+              0,
+              0,
+              17
+            ],
+            [
+              21,
+              62,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              134,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              91,
+              0
+            ],
+            [
+              2,
+              0,
+              0,
+              0,
+              0,
+              89
+            ]
+          ]
+        }
+      }
+    },
+    "text/linsvm": {
+      "feature_set": "text",
+      "algorithm": "linsvm",
+      "categorical_columns": [],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.90328326873385,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.90328326873385,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9009763626588975,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9028739177210298,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.8950561270020195,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.9028739177210298,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.936347822690073,
+          "fit_s": 0.3
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.939940603923973,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.8966488999122881,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.8931824212022907,
+          "fit_s": 1.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9401562039493073,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9378335986208793,
+          "fit_s": 2.2
+        }
+      ],
+      "selected_params": {
+        "C": 10.0,
+        "ngram": 2,
+        "char": false
+      },
+      "val_macro_f1": 0.9401562039493073,
+      "test": {
+        "n": 593,
+        "accuracy": 0.9258010118043845,
+        "macro": {
+          "precision": 0.9378568291611771,
+          "recall": 0.9198276622975419,
+          "f1": 0.9248602474718924
+        },
+        "weighted": {
+          "precision": 0.9341971663256214,
+          "recall": 0.9258010118043845,
+          "f1": 0.9263835254020351
+        },
+        "per_class": {
+          "Access": {
+            "precision": 0.7575757575757576,
+            "recall": 0.8928571428571429,
+            "f1": 0.819672131147541,
+            "support": 112
+          },
+          "Application": {
+            "precision": 1.0,
+            "recall": 0.7469879518072289,
+            "f1": 0.8551724137931035,
+            "support": 83
+          },
+          "Database": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 134
+          },
+          "Network": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 91
+          },
+          "Security": {
+            "precision": 0.8695652173913043,
+            "recall": 0.8791208791208791,
+            "f1": 0.8743169398907104,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              100,
+              0,
+              0,
+              0,
+              0,
+              12
+            ],
+            [
+              21,
+              62,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              134,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              91,
+              0
+            ],
+            [
+              11,
+              0,
+              0,
+              0,
+              0,
+              80
+            ]
+          ]
+        }
+      }
+    },
+    "structured/logreg": {
+      "feature_set": "structured",
+      "algorithm": "logreg",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1
+          },
+          "val_macro_f1": 0.9214938499315348,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0
+          },
+          "val_macro_f1": 0.9214938499315348,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0
+          },
+          "val_macro_f1": 0.9214938499315348,
+          "fit_s": 0.1
+        }
+      ],
+      "selected_params": {
+        "C": 0.1
+      },
+      "val_macro_f1": 0.9214938499315348,
+      "test": {
+        "n": 593,
+        "accuracy": 0.9359190556492412,
+        "macro": {
+          "precision": 0.9429400644353917,
+          "recall": 0.9304732666931462,
+          "f1": 0.9326423903746596
+        },
+        "weighted": {
+          "precision": 0.9426196969813303,
+          "recall": 0.9359190556492412,
+          "f1": 0.9357594996652078
+        },
+        "per_class": {
+          "Access": {
+            "precision": 0.8632478632478633,
+            "recall": 0.9017857142857143,
+            "f1": 0.8820960698689956,
+            "support": 112
+          },
+          "Application": {
+            "precision": 1.0,
+            "recall": 0.7469879518072289,
+            "f1": 0.8551724137931035,
+            "support": 83
+          },
+          "Database": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 134
+          },
+          "Network": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 91
+          },
+          "Security": {
+            "precision": 0.794392523364486,
+            "recall": 0.9340659340659341,
+            "f1": 0.8585858585858586,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              101,
+              0,
+              0,
+              0,
+              0,
+              11
+            ],
+            [
+              10,
+              62,
+              0,
+              0,
+              0,
+              11
+            ],
+            [
+              0,
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              134,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              91,
+              0
+            ],
+            [
+              6,
+              0,
+              0,
+              0,
+              0,
+              85
+            ]
+          ]
+        }
+      }
+    },
+    "structured/linsvm": {
+      "feature_set": "structured",
+      "algorithm": "linsvm",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1
+          },
+          "val_macro_f1": 0.9214938499315348,
+          "fit_s": 0.0
+        },
+        {
+          "params": {
+            "C": 1.0
+          },
+          "val_macro_f1": 0.9214938499315348,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0
+          },
+          "val_macro_f1": 0.9256332486704032,
+          "fit_s": 0.2
+        }
+      ],
+      "selected_params": {
+        "C": 10.0
+      },
+      "val_macro_f1": 0.9256332486704032,
+      "test": {
+        "n": 593,
+        "accuracy": 0.9376053962900506,
+        "macro": {
+          "precision": 0.9382600036523577,
+          "recall": 0.9330108897126971,
+          "f1": 0.9344939657894534
+        },
+        "weighted": {
+          "precision": 0.939260619568436,
+          "recall": 0.9376053962900506,
+          "f1": 0.9374377401874328
+        },
+        "per_class": {
+          "Access": {
+            "precision": 0.8632478632478633,
+            "recall": 0.9017857142857143,
+            "f1": 0.8820960698689956,
+            "support": 112
+          },
+          "Application": {
+            "precision": 0.9295774647887324,
+            "recall": 0.7951807228915663,
+            "f1": 0.8571428571428571,
+            "support": 83
+          },
+          "Database": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 134
+          },
+          "Network": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 91
+          },
+          "Security": {
+            "precision": 0.8367346938775511,
+            "recall": 0.9010989010989011,
+            "f1": 0.8677248677248677,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              101,
+              2,
+              0,
+              0,
+              0,
+              9
+            ],
+            [
+              10,
+              66,
+              0,
+              0,
+              0,
+              7
+            ],
+            [
+              0,
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              134,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              91,
+              0
+            ],
+            [
+              6,
+              3,
+              0,
+              0,
+              0,
+              82
+            ]
+          ]
+        }
+      }
+    },
+    "combined/logreg": {
+      "feature_set": "combined",
+      "algorithm": "logreg",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.9175767432766314,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.9154437840878519,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9273017902813301,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9171394456962562,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.9149870763316525,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.9120497306612986,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9222368968131681,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9154437840878519,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.9280378857551604,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.8981570512820513,
+          "fit_s": 0.6
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9288604280510017,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9047181372549019,
+          "fit_s": 0.6
+        }
+      ],
+      "selected_params": {
+        "C": 10.0,
+        "ngram": 2,
+        "char": false
+      },
+      "val_macro_f1": 0.9288604280510017,
+      "test": {
+        "n": 593,
+        "accuracy": 0.9308600337268128,
+        "macro": {
+          "precision": 0.9282213157213158,
+          "recall": 0.9260089809788606,
+          "f1": 0.9257796257796258
+        },
+        "weighted": {
+          "precision": 0.9319208101248574,
+          "recall": 0.9308600337268128,
+          "f1": 0.9302128435349346
+        },
+        "per_class": {
+          "Access": {
+            "precision": 0.8909090909090909,
+            "recall": 0.875,
+            "f1": 0.8828828828828829,
+            "support": 112
+          },
+          "Application": {
+            "precision": 0.8611111111111112,
+            "recall": 0.7469879518072289,
+            "f1": 0.8,
+            "support": 83
+          },
+          "Database": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 134
+          },
+          "Network": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 91
+          },
+          "Security": {
+            "precision": 0.8173076923076923,
+            "recall": 0.9340659340659341,
+            "f1": 0.8717948717948718,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              98,
+              5,
+              0,
+              0,
+              0,
+              9
+            ],
+            [
+              11,
+              62,
+              0,
+              0,
+              0,
+              10
+            ],
+            [
+              0,
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              134,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              91,
+              0
+            ],
+            [
+              1,
+              5,
+              0,
+              0,
+              0,
+              85
+            ]
+          ]
+        }
+      }
+    },
+    "combined/linsvm": {
+      "feature_set": "combined",
+      "algorithm": "linsvm",
+      "categorical_columns": [
+        "service",
+        "impact",
+        "urgency"
+      ],
+      "tuning_trials": [
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.916679285018437,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.9062284959371381,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.917319038091985,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 0.1,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9183880792659419,
+          "fit_s": 0.5
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.9050814232397935,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.9050814232397935,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9202836492692673,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 1.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9220381034828867,
+          "fit_s": 0.7
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": false
+          },
+          "val_macro_f1": 0.9050814232397935,
+          "fit_s": 0.1
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 1,
+            "char": true
+          },
+          "val_macro_f1": 0.9047181372549019,
+          "fit_s": 0.9
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": false
+          },
+          "val_macro_f1": 0.9079807707712519,
+          "fit_s": 0.2
+        },
+        {
+          "params": {
+            "C": 10.0,
+            "ngram": 2,
+            "char": true
+          },
+          "val_macro_f1": 0.9047181372549019,
+          "fit_s": 1.1
+        }
+      ],
+      "selected_params": {
+        "C": 1.0,
+        "ngram": 2,
+        "char": true
+      },
+      "val_macro_f1": 0.9220381034828867,
+      "test": {
+        "n": 593,
+        "accuracy": 0.9713322091062394,
+        "macro": {
+          "precision": 0.9694931773879142,
+          "recall": 0.9726419413919415,
+          "f1": 0.9703121457316214
+        },
+        "weighted": {
+          "precision": 0.9729603660641205,
+          "recall": 0.9713322091062394,
+          "f1": 0.9713821651756779
+        },
+        "per_class": {
+          "Access": {
+            "precision": 1.0,
+            "recall": 0.9017857142857143,
+            "f1": 0.9483568075117371,
+            "support": 112
+          },
+          "Application": {
+            "precision": 0.9222222222222223,
+            "recall": 1.0,
+            "f1": 0.9595375722543352,
+            "support": 83
+          },
+          "Database": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 82
+          },
+          "Hardware": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 134
+          },
+          "Network": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "support": 91
+          },
+          "Security": {
+            "precision": 0.8947368421052632,
+            "recall": 0.9340659340659341,
+            "f1": 0.9139784946236559,
+            "support": 91
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "Access",
+            "Application",
+            "Database",
+            "Hardware",
+            "Network",
+            "Security"
+          ],
+          "matrix": [
+            [
+              101,
+              1,
+              0,
+              0,
+              0,
+              10
+            ],
+            [
+              0,
+              83,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              82,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              134,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              91,
+              0
+            ],
+            [
+              0,
+              6,
+              0,
+              0,
+              0,
+              85
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "protocol": "tune on validation only; refit finalists on train+val; evaluate once on untouched test",
+  "selected_by_validation": "text/linsvm",
+  "dataset": {
+    "provenance": "synthetic-demo",
+    "fingerprint": "728207b4fc738158",
+    "rows": 3000,
+    "warning": "SYNTHETIC demo data: results are not evidence of real-world performance"
+  }
+}

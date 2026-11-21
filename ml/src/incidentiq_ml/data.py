@@ -63,7 +63,16 @@ def prepare_tickets() -> pd.DataFrame:
     df["short_description"] = df["description"].str.split(r"[\n.!?]", n=1, regex=True).str[0].str.slice(0, 120)
     df["incident_id"] = "TKT-" + df["incident_id"].astype(str)
     df["provenance"] = C.PROV_REAL
-    return df[["incident_id", "short_description", "description", "category", "author_split", "provenance"]]
+    return df[
+        [
+            "incident_id",
+            "short_description",
+            "description",
+            "category",
+            "author_split",
+            "provenance",
+        ]
+    ]
 
 
 def prepare_uci() -> pd.DataFrame:
