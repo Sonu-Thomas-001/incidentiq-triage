@@ -8,6 +8,7 @@ An explainable machine learning framework for automated IT incident classificati
 
 - **Phase 1 (backend):** schema + migrations, local auth with RBAC, incident lifecycle with audit trail and optimistic concurrency, REST API, synthetic seed data, tests.
 - **Phase 2 (ML pipeline):** dataset provenance, validation, EDA, leakage-aware splits, baselines, TF-IDF + Logistic Regression / Linear SVM, ablation, calibration, explainability, joblib artifacts, and `POST /incidents/{id}/triage` backed by the trained models. See [Phase 2](#phase-2-data-science-and-ml-pipeline) and [docs/report/](docs/report/).
+- **Phase 3 (workflow/integrations)** and **Phase 4 (React frontend)** and **Phase 5 (QA, reproducibility, docs)**: see the sections below.
 
 If no model artifacts are present, triage returns `status: NOT_READY` (nothing is invented). All seeded incidents are **synthetic** (`is_synthetic = true`, titles prefixed `[SYNTHETIC]`).
 
@@ -215,6 +216,15 @@ Backend additions: `GET /models/evaluations` (analyst/admin; summarises committe
 `docs/report/results/*.json`, DEMO experiments flagged) and extra `/analytics/overview` fields
 (`by_approved_category`, `incidents_per_day`, `override_rate`, `confidence_histogram`, ...), which are
 empty or null when there is no data. CI: `frontend-ci` runs typecheck, lint, tests and build.
+
+## Phase 5: QA, reproducibility and submission material
+
+- **Reproducible setup:** `requirements-lock.txt` (pip freeze, verified on Python 3.13.7 only), `scripts/setup.{ps1,sh}` (venv, deps, `.env`, migrations, seed, optional `--train`, frontend install) and `scripts/dev.{ps1,sh}` (backend :8000, frontend :5173). The model loader refuses artifacts built with different library versions, so use the lock file for the trained models.
+- **Train:** `cd ml; $env:PYTHONPATH="src"; python -m incidentiq_ml all` (several minutes; downloads public datasets). A full re-run reproduced all committed metrics.
+- **Tests:** backend 116, ML 14, Vitest 28, Playwright E2E 4 (real backend + UI, isolated DB): `cd frontend; npm run e2e`.
+- **Optional Docker:** `docker-compose.yml` (UI :8080, API :8000, SQLite volume). Written but **not built or run** (Docker was unavailable).
+- **Docs:** [system design](docs/architecture/system-design.md), [dataset card](docs/dataset-card.md), [ML methodology](docs/ml-methodology.md), [model evaluation](docs/model-evaluation.md), [ServiceNow](docs/servicenow-integration.md), [demo guide](docs/demo-guide.md), [limitations](docs/limitations.md), [viva Q&A](docs/viva-questions.md), [video plan](docs/presentation/video-plan.md), [IEEE LaTeX draft](docs/report/latex/main.tex) (standard IEEEtran; IITG template not yet applied; not compiled locally).
+- **Screenshots:** [docs/presentation/screenshots/](docs/presentation/screenshots) (regenerate with `CAPTURE=1 npm run e2e`).
 
 ## Remaining work
 
