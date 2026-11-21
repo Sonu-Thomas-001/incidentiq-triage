@@ -15,7 +15,7 @@ If no model artifacts are present, triage returns `status: NOT_READY` (nothing i
 
 ```
 backend/   FastAPI app (app/{api,db,models,schemas,services,core}), alembic/, tests/
-frontend/  React + TypeScript (planned, Phase 4)
+frontend/  React + TypeScript + Vite UI (Phase 4)
 ml/        data/{raw,processed}, src, artifacts, experiments, notebooks (Phase 2+)
 docs/      architecture, report, presentation
 ```
@@ -206,6 +206,16 @@ Configuration variables (all in `.env.example`): `ROUTING_*`, `GEMINI_*`, `GOOGL
 `SERVICENOW_MODE=live` (or `mock`), a preview, explicit confirmation and the instance host. The
 ServiceNow client has been tested only against mocks, not a live instance.
 
+## Phase 4: React frontend
+
+`frontend/` is a light-theme React 19 + TypeScript + Vite app with eight pages (overview, explorer,
+create, AI triage workspace, team queues, analytics, audit timeline, admin) on the real API. See
+[frontend/README.md](frontend/README.md) for setup, roles, the demo flow and limitations.
+Backend additions: `GET /models/evaluations` (analyst/admin; summarises committed
+`docs/report/results/*.json`, DEMO experiments flagged) and extra `/analytics/overview` fields
+(`by_approved_category`, `incidents_per_day`, `override_rate`, `confidence_histogram`, ...), which are
+empty or null when there is no data. CI: `frontend-ci` runs typecheck, lint, tests and build.
+
 ## Remaining work
 
-Validate routing thresholds on real held-out data and train a real-data team model (current team model is synthetic); live-instance verification of the ServiceNow adapter; retraining from `feedback_labels`; Phase 4: React UI. Also: login rate limiting, refresh tokens/password change, user admin endpoints, PostgreSQL option.
+Validate routing thresholds on real held-out data and train a real-data team model (current team model is synthetic); live-instance verification of the ServiceNow adapter; ServiceNow sync UI; retraining from `feedback_labels`. Also: login rate limiting, refresh tokens/password change, user admin endpoints, PostgreSQL option.
