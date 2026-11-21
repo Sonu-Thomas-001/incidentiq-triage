@@ -259,6 +259,19 @@ def request_triage(
     )
     ensure_transition(IncidentStatus.TRIAGE_PENDING, IncidentStatus.NEEDS_REVIEW)
     result = ml_service.predict(incident.title, incident.description, impact, urgency)
+    prediction = record_prediction(db, actor, incident, result)
+    db.commit()
+    return incident, prediction, result
+
+
+def record_prediction(
+    db: Session,
+    actor: User,
+    incident: Incident,
+    result: dict,
+    extra_audit: dict | None = None,
+) -> TriagePrediction:
+    """Persist a recommendation, move TRIAGE_PENDING -> NEEDS_REVIEW and audit it (caller commits)."""
     status = PredictionStatus(result["status"])
     versions = sync_model_versions(db)
     outs = result["outputs"]
@@ -305,10 +318,10 @@ def request_triage(
             "prediction_id": str(prediction.id),
             "prediction_status": status.value,
             "model_versions": result["model_versions"],
+            **(extra_audit or {}),
         },
     )
-    db.commit()
-    return incident, prediction, result
+    return prediction
 
 
 def _record_labels(
@@ -371,6 +384,7 @@ def assign_incident(
     category: str | None,
     reason: str | None,
     prediction_id: uuid.UUID | None,
+    commit: bool = True,
 ) -> Incident:
     incident = _get_incident(db, incident_id)
     _check_version(incident, expected_version)
@@ -413,7 +427,8 @@ def assign_incident(
             "reason": reason,
         },
     )
-    db.commit()
+    if commit:
+        db.commit()
     return incident
 
 

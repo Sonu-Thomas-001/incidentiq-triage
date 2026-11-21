@@ -5,9 +5,11 @@ from app.models.entities import (
     Incident,
     ModelVersion,
     RoutingRule,
+    SyncRecord,
     Team,
     TriagePrediction,
     User,
+    WorkflowRun,
 )
 
 __all__ = [
@@ -17,7 +19,9 @@ __all__ = [
     "Incident",
     "ModelVersion",
     "RoutingRule",
+    "SyncRecord",
     "Team",
     "TriagePrediction",
     "User",
+    "WorkflowRun",
 ]

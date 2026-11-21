@@ -29,6 +29,9 @@ from app.models.enums import (
     PredictionStatus,
     Priority,
     Role,
+    SyncStatus,
+    WorkflowKind,
+    WorkflowRunStatus,
 )
 
 
@@ -43,6 +46,8 @@ class Team(Base):
     name: Mapped[str] = mapped_column(String(100), unique=True)
     description: Mapped[str | None] = mapped_column(String(500))
     is_synthetic: Mapped[bool] = mapped_column(Boolean, default=False)
+    # sys_id of the matching ServiceNow assignment group (explicit mapping set by an admin).
+    servicenow_group_sys_id: Mapped[str | None] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
 
 
@@ -78,6 +83,12 @@ class Incident(Base):
     approved_priority: Mapped[Priority | None] = mapped_column(_enum(Priority), index=True)
     approved_category: Mapped[str | None] = mapped_column(String(64), index=True)
     is_synthetic: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Reference to an imported external record (ServiceNow sys_id). The snapshot holds the
+    # mapped source fields as read at import time; none of it is an approved decision.
+    external_system: Mapped[str | None] = mapped_column(String(32))
+    external_sys_id: Mapped[str | None] = mapped_column(String(32))
+    external_number: Mapped[str | None] = mapped_column(String(40))
+    external_snapshot: Mapped[dict[str, Any] | None] = mapped_column(JSON)
     version: Mapped[int] = mapped_column(Integer, default=1)
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, index=True)
     updated_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, onupdate=utcnow)
@@ -182,6 +193,58 @@ class FeedbackLabel(Base):
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
 
 
+class WorkflowRun(Base):
+    """One execution of the LangGraph workflow. `state` never contains the original incident text."""
+
+    __tablename__ = "workflow_runs"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=new_uuid)
+    incident_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("incidents.id"), index=True)
+    kind: Mapped[WorkflowKind] = mapped_column(_enum(WorkflowKind))
+    status: Mapped[WorkflowRunStatus] = mapped_column(_enum(WorkflowRunStatus), index=True)
+    # Replays of the same logical request return the stored run instead of repeating side effects.
+    idempotency_key: Mapped[str] = mapped_column(String(64), unique=True)
+    prediction_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("triage_predictions.id"))
+    actor_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    state: Mapped[dict[str, Any]] = mapped_column(JSON)
+    trace: Mapped[list[Any]] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, index=True)
+    updated_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, onupdate=utcnow)
+
+
+class SyncRecord(Base):
+    """One approved ServiceNow write (or a preview of it) for one local assignment.
+
+    The local approval lives in `assignments`; a failed sync never touches it.
+    """
+
+    __tablename__ = "sync_records"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=new_uuid)
+    incident_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("incidents.id"), index=True)
+    assignment_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("assignments.id"), index=True)
+    system: Mapped[str] = mapped_column(String(32), default="servicenow")
+    instance_host: Mapped[str] = mapped_column(String(255))
+    external_sys_id: Mapped[str] = mapped_column(String(32))
+    external_number: Mapped[str | None] = mapped_column(String(40))
+    target_group_sys_id: Mapped[str] = mapped_column(String(32))
+    # Exact fields to be written: {"assignment_group": {"from": ..., "to": ...}}
+    field_changes: Mapped[dict[str, Any]] = mapped_column(JSON)
+    remote_updated_on: Mapped[str | None] = mapped_column(String(40))
+    # One logical write per (instance, record, assignment, group): prevents duplicate updates.
+    idempotency_key: Mapped[str] = mapped_column(String(64), unique=True)
+    status: Mapped[SyncStatus] = mapped_column(_enum(SyncStatus), index=True)
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    result: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    last_error: Mapped[str | None] = mapped_column(String(500))
+    requested_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    approved_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"))
+    approved_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
+    completed_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
+    created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, onupdate=utcnow)
+
+
 # One current assignment per incident (partial unique index).
 Index(
     "uq_assignments_one_current",
@@ -189,6 +252,10 @@ Index(
     unique=True,
     sqlite_where=Assignment.is_current == true(),
 )
+
+# An external record can be imported at most once.
+Index("uq_incidents_external_ref", Incident.external_system, Incident.external_sys_id, unique=True)
+Index("uq_teams_servicenow_group_sys_id", Team.servicenow_group_sys_id, unique=True)
 
 for _stmt, _table in (
     (triggers.INCIDENT_TEXT_IMMUTABLE, Incident.__table__),

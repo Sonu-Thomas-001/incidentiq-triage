@@ -40,3 +40,22 @@ class LabelType(enum.StrEnum):
     CATEGORY = "CATEGORY"
     PRIORITY = "PRIORITY"
     TEAM = "TEAM"
+
+
+class WorkflowKind(enum.StrEnum):
+    TRIAGE = "TRIAGE"
+    APPROVAL = "APPROVAL"
+
+
+class WorkflowRunStatus(enum.StrEnum):
+    AWAITING_HUMAN_REVIEW = "AWAITING_HUMAN_REVIEW"
+    APPROVED = "APPROVED"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+
+
+class SyncStatus(enum.StrEnum):
+    PREVIEWED = "PREVIEWED"
+    IN_PROGRESS = "IN_PROGRESS"
+    SUCCEEDED = "SUCCEEDED"
+    FAILED = "FAILED"
