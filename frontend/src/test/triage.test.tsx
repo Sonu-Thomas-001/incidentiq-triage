@@ -103,6 +103,19 @@ describe("decision panel permissions and rules", () => {
     expect(btn).toBeEnabled();
   });
 
+  it("reassignment starts empty, excludes the current team and requires a reason", async () => {
+    renderApp(<DecisionPanel status="ACCEPTED" teams={teams as never} canDecide recommendedTeamId="t-net" currentTeamId="t-net" onSubmit={() => undefined} />, { role: "ADMIN" });
+    const user = userEvent.setup();
+    const select = screen.getByLabelText("Reassign to team") as HTMLSelectElement;
+    expect(select.value).toBe("");
+    expect(within(select).queryByRole("option", { name: /Network/ })).toBeNull();
+    await user.selectOptions(select, "t-app");
+    const btn = screen.getByRole("button", { name: "Override / reassign" });
+    expect(btn).toBeDisabled();
+    await user.type(screen.getByLabelText(/Reason/), "Wrong team originally");
+    expect(btn).toBeEnabled();
+  });
+
   it("asks to run triage first for NEW incidents", () => {
     renderApp(<DecisionPanel status="NEW" teams={teams as never} canDecide onSubmit={() => undefined} />, { role: "ADMIN" });
     expect(screen.getByText(/run the triage workflow first/i)).toBeInTheDocument();

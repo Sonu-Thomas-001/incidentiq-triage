@@ -100,7 +100,7 @@ function ExperimentView({ exp }: { exp: Experiment }) {
             <div><dt className="text-slate-400">Dataset fingerprint</dt><dd className="font-mono">{String(ds.fingerprint ?? "—")}</dd></div>
             <div><dt className="text-slate-400">Rows</dt><dd>{String(ds.rows ?? ds.rows_total ?? "—")}</dd></div>
           </dl>
-          {exp.split != null && <p className="text-xs text-slate-500">Split: {typeof exp.split === "string" ? exp.split : JSON.stringify(exp.split)}</p>}
+          {exp.split != null && <p className="text-xs text-slate-500">Split: {formatSplit(exp.split)}</p>}
         </CardContent>
       </Card>
 
@@ -168,6 +168,18 @@ function ExperimentView({ exp }: { exp: Experiment }) {
   );
 }
 
+function formatSplit(split: unknown): string {
+  if (typeof split === "string") return split;
+  if (split && typeof split === "object") {
+    const s = split as Record<string, unknown>;
+    const sizes = ["n_train", "n_val", "n_test"].every((k) => typeof s[k] === "number")
+      ? ` (${s.n_train} train / ${s.n_val} val / ${s.n_test} test)`
+      : "";
+    if (typeof s.strategy === "string") return `${s.strategy}${sizes}`;
+  }
+  return JSON.stringify(split);
+}
+
 export default function AnalyticsPage() {
   const evals = useQuery({ queryKey: ["evaluations"], queryFn: api.evaluations });
   const metrics = useQuery({ queryKey: ["model-metrics"], queryFn: api.modelMetrics });
@@ -176,7 +188,8 @@ export default function AnalyticsPage() {
   if (evals.isPending) return <CardSkeleton rows={6} />;
   if (evals.isError) return <ErrorState error={evals.error} onRetry={() => evals.refetch()} />;
 
-  const exps = evals.data.experiments;
+  // Real-data experiments first so the default view is never a synthetic demo.
+  const exps = [...evals.data.experiments].sort((a, b) => Number(a.is_demo) - Number(b.is_demo));
   const active = exps.find((e) => e.experiment === sel) ?? exps[0];
 
   return (

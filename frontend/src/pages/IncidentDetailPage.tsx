@@ -227,6 +227,7 @@ export default function IncidentDetailPage() {
             canDecide={isAnalyst}
             recommendedTeamId={recommendedTeam}
             recommendedPriority={recommendedPriority}
+            currentTeamId={inc.current_assignment?.team_id}
             busy={decide.isPending}
             onSubmit={async (d) => {
               await decide.mutateAsync({ inc, d, runId: currentRun?.run_id }).catch(() => undefined);

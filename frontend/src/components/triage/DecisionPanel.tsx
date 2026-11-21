@@ -18,6 +18,7 @@ export function DecisionPanel({
   canDecide,
   recommendedTeamId,
   recommendedPriority,
+  currentTeamId,
   busy,
   onSubmit,
 }: {
@@ -26,15 +27,17 @@ export function DecisionPanel({
   canDecide: boolean;
   recommendedTeamId?: string | null;
   recommendedPriority?: string | null;
+  currentTeamId?: string | null;
   busy?: boolean;
   onSubmit: (d: DecisionInput) => void | Promise<void>;
 }) {
-  const [teamId, setTeamId] = useState(recommendedTeamId ?? "");
+  const reassigning = status === "ASSIGNED" || status === "ACCEPTED" || status === "REASSIGNED";
+  const reviewing = status === "NEEDS_REVIEW";
+  // When reassigning, start empty so the analyst picks a new team instead of silently re-selecting the ML recommendation.
+  const [teamId, setTeamId] = useState(reassigning ? "" : (recommendedTeamId ?? ""));
   const [priority, setPriority] = useState(recommendedPriority ?? "");
   const [reason, setReason] = useState("");
 
-  const reassigning = status === "ASSIGNED" || status === "ACCEPTED" || status === "REASSIGNED";
-  const reviewing = status === "NEEDS_REVIEW";
   const deviates =
     reassigning ||
     !recommendedTeamId ||
@@ -74,15 +77,17 @@ export function DecisionPanel({
       </CardHeader>
       <CardContent>
         <form className="space-y-3" onSubmit={(e) => e.preventDefault()} aria-label="Decision form">
-          <Field label="Assign to team" htmlFor="decision-team">
+          <Field label={reassigning ? "Reassign to team" : "Assign to team"} htmlFor="decision-team">
             <Select id="decision-team" value={teamId} onChange={(e) => setTeamId(e.target.value)}>
               <option value="">Select a team…</option>
-              {teams.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
-                  {t.id === recommendedTeamId ? " (recommended)" : ""}
-                </option>
-              ))}
+              {teams
+                .filter((t) => !(reassigning && t.id === currentTeamId))
+                .map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                    {t.id === recommendedTeamId ? " (recommended)" : ""}
+                  </option>
+                ))}
             </Select>
           </Field>
           <Field label="Approved priority" htmlFor="decision-priority">
@@ -100,7 +105,13 @@ export function DecisionPanel({
             label={reasonRequired ? "Reason (required)" : "Reason (optional)"}
             htmlFor="decision-reason"
             error={reasonRequired && reason.length > 0 && !reasonOk ? "Enter at least 5 characters." : undefined}
-            hint={reasonRequired ? "Required because this differs from the recommendation." : undefined}
+            hint={
+              reasonRequired
+                ? reassigning
+                  ? "Required to reassign an incident that already has an assignment."
+                  : "Required because this differs from the recommendation."
+                : undefined
+            }
           >
             <Textarea id="decision-reason" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
           </Field>
