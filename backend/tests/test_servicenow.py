@@ -165,6 +165,26 @@ def test_import_is_idempotent_and_keeps_snapshot_separate_from_decisions(
         assert events.count("SERVICENOW_INCIDENT_IMPORTED") == 1
 
 
+def test_incident_response_exposes_external_reference(api, world, mock_mode):
+    inc_id = _import(api).json()["incident_id"]
+    body = api.get(f"/incidents/{inc_id}", "analyst").json()
+    assert body["external_system"] == "servicenow"
+    assert body["external_number"] == "INC9000001"
+
+
+def test_http_client_is_reused_for_same_settings(monkeypatch):
+    from app.core.config import get_settings
+
+    monkeypatch.setenv("SERVICENOW_INSTANCE_URL", "https://dev1.service-now.com")
+    monkeypatch.setenv("SERVICENOW_MODE", "read_only")
+    monkeypatch.setenv("SERVICENOW_USERNAME", "svc-test")
+    monkeypatch.setenv("SERVICENOW_PASSWORD", "not-a-real-secret")
+    get_settings.cache_clear()
+    settings = get_settings()
+    assert sn._http_client(settings) is sn._http_client(settings)
+    get_settings.cache_clear()
+
+
 def test_import_refuses_closed_records(api, world, mock_mode):
     r = _import(api, INC_CLOSED)
     assert r.status_code == 409 and "not importable" in r.json()["error"]["message"]

@@ -72,7 +72,22 @@ def get_client(settings: Settings | None = None) -> ServiceNowClient:
         return _client_override(settings)
     if settings.servicenow_mode == "mock":
         return _mock_client or reset_mock()
-    return HttpServiceNowClient(settings)
+    return _http_client(settings)
+
+
+_http_cache: tuple[Settings, HttpServiceNowClient] | None = None
+
+
+def _http_client(settings: Settings) -> HttpServiceNowClient:
+    """Reuse one connection pool per settings object instead of leaking a client per call."""
+    global _http_cache
+    if _http_cache is not None and _http_cache[0] is settings:
+        return _http_cache[1]
+    if _http_cache is not None:
+        _http_cache[1].close()
+    client = HttpServiceNowClient(settings)
+    _http_cache = (settings, client)
+    return client
 
 
 def _writes_allowed(settings: Settings) -> bool:

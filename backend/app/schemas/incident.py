@@ -81,6 +81,8 @@ class IncidentOut(BaseModel):
     approved_priority: Priority | None
     approved_category: str | None
     is_synthetic: bool
+    external_system: str | None = None
+    external_number: str | None = None
     version: int
     created_at: datetime
     updated_at: datetime
