@@ -1,6 +1,7 @@
 import logging
 import secrets
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -22,6 +23,9 @@ class Settings(BaseSettings):
     )
     log_level: str = "INFO"
     demo_password: str = ""
+    # Directory with trained-model artifacts + manifest.json (produced by `python -m incidentiq_ml train`).
+    # Only point this at artifacts you produced yourself: joblib files can execute code when loaded.
+    model_dir: str = str(Path(__file__).resolve().parents[3] / "ml" / "artifacts")
 
     def resolved_secret_key(self) -> str:
         if self.secret_key:

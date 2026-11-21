@@ -88,13 +88,28 @@ def triage_incident(
     db: DbSession,
     user: Annotated[User, Depends(require_roles(*ANALYST_OR_ADMIN))],
 ) -> TriageResult:
-    """Phase 1: always returns NOT_READY (no trained model); routes incident to NEEDS_REVIEW."""
-    incident, prediction = svc.request_triage(db, user, incident_id, body.expected_version)
+    """Run trained models (if available) and route to NEEDS_REVIEW. Recommendation only.
+
+    Returns an explicit NOT_READY response when no model artifacts can be loaded; demo
+    (synthetic-trained) outputs are labelled DEMO.
+    """
+    incident, prediction, result = svc.request_triage(
+        db, user, incident_id, body.expected_version, body.impact, body.urgency
+    )
+    message = {
+        "NOT_READY": svc.NOT_READY_MESSAGE,
+        "DEMO": svc.DEMO_MESSAGE,
+        "MODEL": svc.MODEL_MESSAGE,
+    }[prediction.status.value]
     return TriageResult(
         status=prediction.status,
-        is_demo=False,
-        message=svc.NOT_READY_MESSAGE,
+        is_demo=result["is_demo"],
+        message=message,
         prediction_id=prediction.id,
+        confidence=result["confidence"],
+        outputs=result["outputs"],
+        decision_evidence=result["decision_evidence"],
+        model_versions=result["model_versions"],
         incident=_detail(db, incident, user),
     )
 
@@ -130,7 +145,11 @@ def accept_incident(
     return _detail(db, svc.accept_incident(db, user, incident_id, body.expected_version), user)
 
 
-@router.post("/incidents/{incident_id}/override", response_model=IncidentDetail, tags=["workflow"])
+@router.post(
+    "/incidents/{incident_id}/override",
+    response_model=IncidentDetail,
+    tags=["workflow"],
+)
 def override_incident(
     incident_id: uuid.UUID,
     body: OverrideRequest,

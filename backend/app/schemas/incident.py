@@ -4,7 +4,12 @@ from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.models.enums import AssignmentStatus, IncidentStatus, PredictionStatus, Priority
+from app.models.enums import (
+    AssignmentStatus,
+    IncidentStatus,
+    PredictionStatus,
+    Priority,
+)
 
 T = TypeVar("T")
 
@@ -31,12 +36,19 @@ class IncidentCreate(BaseModel):
 
 class _Versioned(BaseModel):
     expected_version: int = Field(
-        ge=1, description="Incident version the client last saw (optimistic concurrency)."
+        ge=1,
+        description="Incident version the client last saw (optimistic concurrency).",
     )
 
 
 class TriageRequest(_Versioned):
-    pass
+    impact: int | None = Field(
+        default=None,
+        ge=1,
+        le=3,
+        description="1 = High ... 3 = Low. Needed for the priority policy.",
+    )
+    urgency: int | None = Field(default=None, ge=1, le=3, description="1 = High ... 3 = Low.")
 
 
 class AcceptRequest(_Versioned):
@@ -111,6 +123,10 @@ class TriageResult(BaseModel):
     is_demo: bool
     message: str
     prediction_id: uuid.UUID
+    confidence: float | None = None
+    outputs: dict[str, Any] = Field(default_factory=dict)
+    decision_evidence: list[str] = Field(default_factory=list)
+    model_versions: dict[str, str] = Field(default_factory=dict)
     incident: IncidentDetail
 
 

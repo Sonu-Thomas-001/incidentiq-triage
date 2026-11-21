@@ -32,16 +32,25 @@ from app.models.enums import (
     Priority,
     Role,
 )
-from app.services import audit
+from app.services import audit, ml_service
 from app.services.lifecycle import ensure_transition
 
 STAFF_ROLES = {Role.TRIAGE_ANALYST, Role.SUPPORT_ENGINEER, Role.ADMIN}
-OPEN_QUEUE_STATUSES = (IncidentStatus.ASSIGNED, IncidentStatus.REASSIGNED, IncidentStatus.ACCEPTED)
+OPEN_QUEUE_STATUSES = (
+    IncidentStatus.ASSIGNED,
+    IncidentStatus.REASSIGNED,
+    IncidentStatus.ACCEPTED,
+)
 
 NOT_READY_MESSAGE = (
-    "No trained model is available (Phase 1). No category, priority or team prediction was "
-    "generated; the incident needs human review."
+    "No trained model is available. No category or team prediction was generated; "
+    "the incident needs human review."
 )
+DEMO_MESSAGE = (
+    "DEMO: at least one output comes from a model trained on SYNTHETIC data and says nothing "
+    "about real-world accuracy. Recommendations only; a human must approve."
+)
+MODEL_MESSAGE = "Recommendations from trained models; a human must approve any assignment."
 
 
 @dataclass
@@ -178,15 +187,64 @@ def team_queue(
     stmt = (
         select(Incident)
         .join(Assignment, Assignment.incident_id == Incident.id)
-        .where(Assignment.team_id == team_id, Assignment.is_current, Incident.status.in_(statuses))
+        .where(
+            Assignment.team_id == team_id,
+            Assignment.is_current,
+            Incident.status.in_(statuses),
+        )
     )
     return _paginate(db, stmt, page, page_size)
 
 
+def sync_model_versions(db: Session) -> dict[str, ModelVersion]:
+    """Mirror artifact manifest entries into model_versions (idempotent); metrics are as measured."""
+    out: dict[str, ModelVersion] = {}
+    for e in ml_service.manifest_entries():
+        mv = db.scalar(
+            select(ModelVersion).where(
+                ModelVersion.name == e["key"],
+                ModelVersion.version == e["model_version"],
+            )
+        )
+        if mv is None:
+            mv = ModelVersion(
+                name=e["key"],
+                version=e["model_version"],
+                status="DEMO" if e.get("is_demo") else "ACTIVE",
+                metrics={
+                    "provenance": e["provenance"],
+                    "is_demo": bool(e.get("is_demo")),
+                    "test_metrics": e.get("metrics"),
+                    "split": e.get("split"),
+                    "dataset_fingerprint": e.get("dataset_fingerprint"),
+                    "training_config": e.get("training_config"),
+                    "library_versions": e.get("library_versions"),
+                    "class_mapping": e.get("class_mapping"),
+                    "sha256": e.get("sha256"),
+                },
+                artifact_path=e.get("file"),
+                trained_at=(
+                    datetime.fromisoformat(e["trained_at"]) if e.get("trained_at") else None
+                ),
+            )
+            db.add(mv)
+            db.flush()
+        out[e["key"]] = mv
+    return out
+
+
 def request_triage(
-    db: Session, actor: User, incident_id: uuid.UUID, expected_version: int
-) -> tuple[Incident, TriagePrediction]:
-    """Phase 1: no model exists, so triage records a NOT_READY result and routes to review."""
+    db: Session,
+    actor: User,
+    incident_id: uuid.UUID,
+    expected_version: int,
+    impact: int | None = None,
+    urgency: int | None = None,
+) -> tuple[Incident, TriagePrediction, dict]:
+    """Run the trained models (or record NOT_READY) and route the incident to human review.
+
+    The result is a recommendation only; no assignment or approved value is changed here.
+    """
     incident = _get_incident(db, incident_id)
     _check_version(incident, expected_version)
     original = incident.status
@@ -200,26 +258,57 @@ def request_triage(
         to_status=IncidentStatus.TRIAGE_PENDING,
     )
     ensure_transition(IncidentStatus.TRIAGE_PENDING, IncidentStatus.NEEDS_REVIEW)
+    result = ml_service.predict(incident.title, incident.description, impact, urgency)
+    status = PredictionStatus(result["status"])
+    versions = sync_model_versions(db)
+    outs = result["outputs"]
+    category = outs["category"].get("label") if outs["category"].get("available") else None
+    team_id = None
+    if outs["team"].get("available"):
+        team_id = db.scalar(select(Team.id).where(Team.name == outs["team"]["label"]))
+    priority = Priority(outs["priority"]["label"]) if outs["priority"].get("available") else None
+    primary = (
+        ml_service.CATEGORY_KEY
+        if outs["category"].get("available")
+        else ml_service.TEAM_KEY if outs["team"].get("available") else None
+    )
     prediction = TriagePrediction(
         incident_id=incident.id,
-        status=PredictionStatus.NOT_READY,
+        status=status,
+        predicted_category=category,
+        predicted_priority=priority,
+        predicted_team_id=team_id,
+        confidence=result["confidence"],
+        explanation={
+            "outputs": outs,
+            "decision_evidence": result["decision_evidence"],
+            "model_versions": result["model_versions"],
+            "disclaimer": result["disclaimer"],
+            **({} if status != PredictionStatus.NOT_READY else {"reason": "no_trained_model"}),
+        },
+        model_version_id=versions[primary].id if primary in versions else None,
         requested_by=actor.id,
-        explanation={"reason": "no_trained_model"},
     )
     db.add(prediction)
     incident.status = IncidentStatus.NEEDS_REVIEW
     db.flush()
     audit.record(
         db,
-        event_type="TRIAGE_NOT_READY",
+        event_type=(
+            "TRIAGE_NOT_READY" if status == PredictionStatus.NOT_READY else "TRIAGE_RECOMMENDED"
+        ),
         actor_id=actor.id,
         incident_id=incident.id,
         from_status=IncidentStatus.TRIAGE_PENDING,
         to_status=IncidentStatus.NEEDS_REVIEW,
-        details={"prediction_id": str(prediction.id), "prediction_status": "NOT_READY"},
+        details={
+            "prediction_id": str(prediction.id),
+            "prediction_status": status.value,
+            "model_versions": result["model_versions"],
+        },
     )
     db.commit()
-    return incident, prediction
+    return incident, prediction, result
 
 
 def _record_labels(
@@ -286,7 +375,11 @@ def assign_incident(
     incident = _get_incident(db, incident_id)
     _check_version(incident, expected_version)
     original = incident.status
-    if original in (IncidentStatus.ASSIGNED, IncidentStatus.ACCEPTED, IncidentStatus.REASSIGNED):
+    if original in (
+        IncidentStatus.ASSIGNED,
+        IncidentStatus.ACCEPTED,
+        IncidentStatus.REASSIGNED,
+    ):
         raise InvalidTransitionError(
             "Incident is already assigned; use the override endpoint to reassign",
             {"from": original.value, "to": IncidentStatus.ASSIGNED.value},
@@ -400,7 +493,10 @@ def accept_incident(
         incident_id=incident.id,
         from_status=original,
         to_status=IncidentStatus.ACCEPTED,
-        details={"assignment_id": str(assignment.id), "team_id": str(assignment.team_id)},
+        details={
+            "assignment_id": str(assignment.id),
+            "team_id": str(assignment.team_id),
+        },
     )
     db.commit()
     return incident
@@ -457,22 +553,25 @@ def analytics_overview(db: Session) -> dict:
                 IncidentStatus.NEEDS_REVIEW,
             )
         ),
-        "model_status": "AVAILABLE" if has_model else "NOT_READY",
+        "model_status": ("AVAILABLE" if (has_model or ml_service.available()) else "NOT_READY"),
         "note": "Counts are of recorded human decisions only; no model predictions are included.",
     }
 
 
 def model_metrics(db: Session) -> dict:
+    sync_model_versions(db)
+    db.commit()
     models = db.scalars(select(ModelVersion).order_by(ModelVersion.created_at)).all()
     if not models:
         return {
             "status": "NOT_READY",
-            "message": "No trained model has been registered (Phase 1). No metrics are available.",
+            "message": "No trained model has been registered. No metrics are available.",
             "models": [],
         }
     return {
         "status": "AVAILABLE",
-        "message": "Metrics are as recorded at model registration.",
+        "message": "Metrics were measured offline on a held-out test split at training time; "
+        "models with is_demo=true were trained on SYNTHETIC data.",
         "models": [
             {
                 "id": str(m.id),

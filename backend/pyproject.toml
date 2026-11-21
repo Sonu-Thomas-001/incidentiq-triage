@@ -15,7 +15,7 @@ extend-exclude = ["alembic/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
-ignore = ["B008"]
+ignore = ["B008", "E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "app/db/seed.py" = ["E501"]
