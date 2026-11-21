@@ -84,6 +84,14 @@ def test_full_lifecycle_with_audit_trail(api, world):
         override_event["from_status"] == "ACCEPTED" and override_event["to_status"] == "REASSIGNED"
     )
 
+    # audit integrity: every status change is recorded and the chain is contiguous
+    chain = [e for e in events if e["to_status"] is not None]
+    assert chain[0]["from_status"] in (None, "NEW")
+    for prev, nxt in zip(chain, chain[1:], strict=False):
+        assert nxt["from_status"] == prev["to_status"]
+    assert chain[-1]["to_status"] == api.get(f"/incidents/{inc['id']}", "analyst").json()["status"]
+    assert [e["created_at"] for e in events] == sorted(e["created_at"] for e in events)
+
 
 def test_assign_directly_from_new(api, world):
     inc = api.create()
