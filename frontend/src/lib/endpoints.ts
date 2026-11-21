@@ -25,6 +25,12 @@ export interface IncidentFilters {
 }
 
 const looseRecord = z.record(z.string(), z.unknown());
+const snPageSchema = z.object({
+  items: z.array(looseRecord),
+  total: z.number().nullable(),
+  page: z.number(),
+  page_size: z.number(),
+});
 
 export const api = {
   login: (email: string, password: string) =>
@@ -80,4 +86,12 @@ export const api = {
     request(`/integrations/servicenow/incidents/${id}/sync/preview`, { method: "POST", schema: looseRecord }),
   snSyncApprove: (id: string, body: { preview_id: string; confirm: boolean; confirm_instance_host: string }) =>
     request(`/integrations/servicenow/incidents/${id}/sync/approve`, { method: "POST", body, schema: looseRecord }),
+  snSyncHistory: (id: string) =>
+    request(`/integrations/servicenow/incidents/${id}/sync`, { schema: z.array(looseRecord) }),
+  snIncidents: (f: { page?: number; page_size?: number; state?: string; q?: string }) =>
+    request("/integrations/servicenow/incidents", { query: { ...f }, schema: snPageSchema }),
+  snGroups: (page = 1) =>
+    request("/integrations/servicenow/assignment-groups", { query: { page, page_size: 50 }, schema: snPageSchema }),
+  snImport: (sys_id: string) =>
+    request("/integrations/servicenow/import", { method: "POST", body: { sys_id }, schema: looseRecord }),
 };

@@ -1,4 +1,4 @@
-import { BarChart3, ClipboardList, FilePlus2, LayoutDashboard, ListChecks, LogOut, Menu, Settings, Sparkles, X } from "lucide-react";
+import { BarChart3, ClipboardList, Cloud, FilePlus2, LayoutDashboard, ListChecks, LogOut, Menu, Settings, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Badge } from "@/components/ui/primitives";
@@ -21,6 +21,7 @@ export const NAV: NavItem[] = [
   { to: "/incidents/new", label: "Create Incident", icon: FilePlus2 },
   { to: "/queues", label: "Team Queues", icon: ListChecks, roles: STAFF },
   { to: "/analytics", label: "Analytics", icon: BarChart3, roles: ANALYST_ADMIN },
+  { to: "/servicenow", label: "ServiceNow", icon: Cloud, roles: ANALYST_ADMIN },
   { to: "/admin", label: "Admin Settings", icon: Settings, roles: ANALYST_ADMIN },
 ];
 

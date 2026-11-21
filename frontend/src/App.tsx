@@ -11,6 +11,7 @@ import IncidentDetailPage from "@/pages/IncidentDetailPage";
 import IncidentsPage from "@/pages/IncidentsPage";
 import LoginPage from "@/pages/LoginPage";
 import QueuesPage from "@/pages/QueuesPage";
+import ServiceNowPage from "@/pages/ServiceNowPage";
 
 // Chart-heavy pages are split out so the recharts bundle loads only when needed.
 const DashboardPage = lazy(() => import("@/pages/DashboardPage"));
@@ -66,6 +67,7 @@ export function App() {
           <Route element={<RequireRole roles={ANALYST_ADMIN} />}>
             <Route path="analytics" element={<Suspense fallback={<CardSkeleton rows={4} />}><AnalyticsPage /></Suspense>} />
             <Route path="admin" element={<AdminPage />} />
+            <Route path="servicenow" element={<ServiceNowPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

@@ -8,6 +8,7 @@ import { CardSkeleton, ErrorState, errorMessage, PageHeader, PriorityChip, Statu
 import { Button } from "@/components/ui/button";
 import { Badge, Card, CardContent, CardHeader, CardTitle, Field, Select } from "@/components/ui/primitives";
 import { DecisionPanel, type DecisionInput } from "@/components/triage/DecisionPanel";
+import { SyncPanel } from "@/components/servicenow/SyncPanel";
 import { GeminiPanel, MlPanel, PolicyPanel, RoutingPanel, uncertaintyWarnings } from "@/components/triage/AiPanels";
 import { useTeams } from "@/hooks/useTeams";
 import { ANALYST_ADMIN, STAFF, useAuth } from "@/lib/auth";
@@ -234,6 +235,9 @@ export default function IncidentDetailPage() {
             }}
           />
           <AuditTimeline incidentId={id} />
+          {isAnalyst && inc.external_system === "servicenow" && (
+            <SyncPanel incidentId={id} number={inc.external_number} hasAssignment={!!inc.current_assignment} />
+          )}
         </div>
       </div>
     </>

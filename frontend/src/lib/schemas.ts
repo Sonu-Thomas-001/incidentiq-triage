@@ -49,6 +49,8 @@ export const incidentSchema = z.object({
   approved_priority: z.string().nullable().optional(),
   approved_category: z.string().nullable().optional(),
   is_synthetic: z.boolean(),
+  external_system: z.string().nullable().optional(),
+  external_number: z.string().nullable().optional(),
   version: z.number(),
   created_at: z.string(),
   updated_at: z.string(),

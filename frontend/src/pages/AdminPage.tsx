@@ -45,7 +45,7 @@ export default function AdminPage() {
   const routing = rec(config.data?.routing);
   const thresholds = rec(routing.thresholds);
   const gemini = rec(config.data?.gemini);
-  const snDisabled = health.error instanceof ApiError && health.error.code === "INTEGRATION_DISABLED";
+  const snDisabled = (health.error instanceof ApiError && health.error.code === "INTEGRATION_DISABLED") || health.data?.enabled === false;
   const h = rec(health.data);
   const mapped = new Map((mappings.data ?? []).map((m) => [String(m.team_id), String(m.servicenow_group_sys_id ?? "")]));
 
