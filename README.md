@@ -1,5 +1,7 @@
 # IncidentIQ-Triage
 
+![backend-ci](https://github.com/Sonu-Thomas-001/incidentiq-triage/actions/workflows/backend-ci.yml/badge.svg)
+
 An explainable machine learning framework for automated IT incident classification, priority prediction and team assignment (IIT Guwahati, DA377).
 
 ## Phase 1 status (backend foundation)
