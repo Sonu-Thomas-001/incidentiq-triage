@@ -54,7 +54,12 @@ def assert_no_leakage(feature_columns: list[str], target: str, name: str) -> Non
     """Fail loudly if predictors contain post-triage columns or the target itself."""
     bad = set(feature_columns) & set(C.UCI_LEAKAGE_COLUMNS)
     bad |= {target} & set(feature_columns)
-    bad |= {"final_assignment_group", "template_id", "author_split", "provenance"} & set(feature_columns)
+    bad |= {
+        "final_assignment_group",
+        "template_id",
+        "author_split",
+        "provenance",
+    } & set(feature_columns)
     if bad:
         raise ValidationError(f"{name}: leaking/non-predictor columns in features: {sorted(bad)}")
 

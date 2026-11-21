@@ -58,7 +58,13 @@ def prepare_tickets() -> pd.DataFrame:
         m["author_split"] = split
         parts.append(m)
     df = pd.concat(parts, ignore_index=True)
-    df = df.rename(columns={"id": "incident_id", "text": "description", "category_truth": "category"})
+    df = df.rename(
+        columns={
+            "id": "incident_id",
+            "text": "description",
+            "category_truth": "category",
+        }
+    )
     df["description"] = df["description"].fillna("").astype(str)
     df["short_description"] = df["description"].str.split(r"[\n.!?]", n=1, regex=True).str[0].str.slice(0, 120)
     df["incident_id"] = "TKT-" + df["incident_id"].astype(str)

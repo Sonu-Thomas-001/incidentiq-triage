@@ -55,7 +55,11 @@ def _figures(prefix: str, res: dict, label: str) -> None:
         f"{label}: confusion (test, {res['selected_by_validation']})",
         f"{prefix}_confusion",
     )
-    plots.per_class_recall(best["test"]["per_class"], f"{label}: per-class recall (test)", f"{prefix}_per_class_recall")
+    plots.per_class_recall(
+        best["test"]["per_class"],
+        f"{label}: per-class recall (test)",
+        f"{prefix}_per_class_recall",
+    )
     if len({m["feature_set"] for m in res["models"].values()}) > 1:
         plots.ablation(res["models"], f"{label}: feature ablation", f"{prefix}_ablation")
     if "calibration" in res:
@@ -151,7 +155,10 @@ def task_tickets_category(fast: bool, model_dir: Path | None) -> dict:
             fp,
             ["text"],
             model_dir,
-            {"description": "Category from incident text; trained on the public Zenodo IT-ticket dataset."},
+            {
+                "text_template": "description",
+                "description": "Category from incident text; trained on the public Zenodo IT-ticket dataset.",
+            },
         )
     _figures("tickets_category", res, "Tickets (real) Task A")
     return _write("tickets_category_real", res)
@@ -198,7 +205,10 @@ def task_synthetic(fast: bool, model_dir: Path | None) -> dict:
     comb = b["_fitted"]["combined/logreg"]
     te = split_b.test
     b["permutation_importance_combined_logreg"] = explain.permutation_groups(
-        comb["model"], X.iloc[te], df["assignment_group"].iloc[te], ["text", *SYN_STRUCT]
+        comb["model"],
+        X.iloc[te],
+        df["assignment_group"].iloc[te],
+        ["text", *SYN_STRUCT],
     )
     dep = b["_fitted"]["__deploy__"]
     b["global_top_features"] = explain.global_top_features(dep["model"])
@@ -210,7 +220,10 @@ def task_synthetic(fast: bool, model_dir: Path | None) -> dict:
             fp,
             ["text"],
             model_dir,
-            {"description": "DEMO team routing trained on SYNTHETIC incidents using the app's five team names."},
+            {
+                "text_template": "title_description",
+                "description": "DEMO team routing trained on SYNTHETIC incidents using the app's five team names.",
+            },
         )
     _figures("synthetic_category", a, "SYNTHETIC Task A")
     _figures("synthetic_team", b, "SYNTHETIC Task B")

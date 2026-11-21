@@ -61,7 +61,12 @@ def build_pipeline(feature_set: str, algo: str, params: dict, cat_cols: list[str
             parts.append(
                 (
                     "char",
-                    TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5), sublinear_tf=True, min_df=2),
+                    TfidfVectorizer(
+                        analyzer="char_wb",
+                        ngram_range=(3, 5),
+                        sublinear_tf=True,
+                        min_df=2,
+                    ),
                     "text",
                 )
             )
@@ -91,7 +96,8 @@ class MajorityBaseline(DummyClassifier):
 
 class KeywordRuleClassifier(BaseEstimator, ClassifierMixin):
     """Data-driven keyword rules learned on TRAIN only: each class keeps its most distinctive
-    tokens; prediction = class with most keyword hits, falling back to the majority class."""
+    tokens; prediction = class with most keyword hits, falling back to the majority class.
+    """
 
     def __init__(self, top_k: int = 15, min_count: int = 3):
         self.top_k = top_k
@@ -140,7 +146,8 @@ class KeywordRuleClassifier(BaseEstimator, ClassifierMixin):
 
 class CategoryMapBaseline(BaseEstimator, ClassifierMixin):
     """category -> assignment group lookup learned on train. predict_proba is the empirical
-    P(group | category), a valid ranking for top-k; unseen categories fall back to the prior."""
+    P(group | category), a valid ranking for top-k; unseen categories fall back to the prior.
+    """
 
     def __init__(self, category_col: str = "category"):
         self.category_col = category_col
@@ -193,7 +200,12 @@ def evaluate(model, X, y, topk: tuple[int, ...] = (), high_labels: tuple[str, ..
         "macro": {"precision": float(mp), "recall": float(mr), "f1": float(mf)},
         "weighted": {"precision": float(wp), "recall": float(wr), "f1": float(wf)},
         "per_class": {
-            str(lab): {"precision": float(a), "recall": float(b), "f1": float(c), "support": int(d)}
+            str(lab): {
+                "precision": float(a),
+                "recall": float(b),
+                "f1": float(c),
+                "support": int(d),
+            }
             for lab, a, b, c, d in zip(labels, p, r, f, s)
         },
         "confusion_matrix": {

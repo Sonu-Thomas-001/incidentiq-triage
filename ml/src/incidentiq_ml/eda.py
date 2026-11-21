@@ -156,7 +156,11 @@ def eda_synthetic(df: pd.DataFrame) -> dict:
 
 
 def run_all(tickets: pd.DataFrame, uci: pd.DataFrame, synth: pd.DataFrame) -> dict:
-    res = {"tickets": eda_tickets(tickets), "uci": eda_uci(uci), "synthetic": eda_synthetic(synth)}
+    res = {
+        "tickets": eda_tickets(tickets),
+        "uci": eda_uci(uci),
+        "synthetic": eda_synthetic(synth),
+    }
     C.RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     (C.RESULTS_DIR / "eda_summary.json").write_text(json.dumps(res, indent=2))
     return res

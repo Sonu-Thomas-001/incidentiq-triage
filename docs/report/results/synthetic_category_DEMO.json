@@ -262,7 +262,7 @@
             "char": true
           },
           "val_macro_f1": 0.8436792607714936,
-          "fit_s": 0.6
+          "fit_s": 0.5
         },
         {
           "params": {
@@ -271,7 +271,7 @@
             "char": false
           },
           "val_macro_f1": 0.8036798022615148,
-          "fit_s": 0.2
+          "fit_s": 0.1
         },
         {
           "params": {
@@ -280,7 +280,7 @@
             "char": true
           },
           "val_macro_f1": 0.8397736693007967,
-          "fit_s": 1.1
+          "fit_s": 1.0
         },
         {
           "params": {
@@ -289,7 +289,7 @@
             "char": false
           },
           "val_macro_f1": 0.90328326873385,
-          "fit_s": 0.2
+          "fit_s": 0.4
         },
         {
           "params": {
@@ -585,7 +585,7 @@
             "char": true
           },
           "val_macro_f1": 0.9378335986208793,
-          "fit_s": 2.2
+          "fit_s": 2.3
         }
       ],
       "selected_params": {
@@ -1028,7 +1028,7 @@
             "char": true
           },
           "val_macro_f1": 0.9154437840878519,
-          "fit_s": 0.7
+          "fit_s": 0.5
         },
         {
           "params": {
@@ -1037,7 +1037,7 @@
             "char": false
           },
           "val_macro_f1": 0.9273017902813301,
-          "fit_s": 0.2
+          "fit_s": 0.1
         },
         {
           "params": {
@@ -1046,7 +1046,7 @@
             "char": true
           },
           "val_macro_f1": 0.9171394456962562,
-          "fit_s": 0.6
+          "fit_s": 0.5
         },
         {
           "params": {
@@ -1064,7 +1064,7 @@
             "char": true
           },
           "val_macro_f1": 0.9120497306612986,
-          "fit_s": 0.6
+          "fit_s": 0.7
         },
         {
           "params": {
@@ -1073,7 +1073,7 @@
             "char": false
           },
           "val_macro_f1": 0.9222368968131681,
-          "fit_s": 0.1
+          "fit_s": 0.2
         },
         {
           "params": {
@@ -1355,7 +1355,7 @@
             "char": true
           },
           "val_macro_f1": 0.9047181372549019,
-          "fit_s": 1.1
+          "fit_s": 1.0
         }
       ],
       "selected_params": {

@@ -13,7 +13,11 @@ from . import validation as V
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="incidentiq_ml")
     ap.add_argument("command", choices=["download", "prepare", "validate", "eda", "train", "all"])
-    ap.add_argument("--fast", action="store_true", help="tiny hyper-parameter grid (smoke test only)")
+    ap.add_argument(
+        "--fast",
+        action="store_true",
+        help="tiny hyper-parameter grid (smoke test only)",
+    )
     ap.add_argument("--model-dir", type=Path, default=None)
     ns = ap.parse_args(argv)
     cmds = ["download", "prepare", "validate", "eda", "train"] if ns.command == "all" else [ns.command]
@@ -30,7 +34,11 @@ def main(argv: list[str] | None = None) -> None:
             ):
                 V.write_report(V.report(data.load(n), n, t))
         elif c == "eda":
-            eda.run_all(data.load("tickets"), data.load("uci_incidents"), data.load("synthetic_incidents"))
+            eda.run_all(
+                data.load("tickets"),
+                data.load("uci_incidents"),
+                data.load("synthetic_incidents"),
+            )
         elif c == "train":
             pipeline.run_all(fast=ns.fast, model_dir=ns.model_dir or C.ARTIFACT_DIR)
         print(f"[{c}] done")

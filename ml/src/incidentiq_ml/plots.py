@@ -55,7 +55,13 @@ def ablation(models: dict, title: str, name: str) -> str:
     for i, a in enumerate(algos):
         vals = [models[f"{f}/{a}"]["test"]["macro"]["f1"] for f in fsets]
         ax.bar(np.arange(len(fsets)) + i * w, vals, w, label=a)
-    ax.set_xticks(np.arange(len(fsets)) + w * (len(algos) - 1) / 2, fsets, rotation=30, ha="right", fontsize=8)
+    ax.set_xticks(
+        np.arange(len(fsets)) + w * (len(algos) - 1) / 2,
+        fsets,
+        rotation=30,
+        ha="right",
+        fontsize=8,
+    )
     ax.set_ylabel("test macro-F1")
     ax.set_ylim(0, 1)
     ax.legend()

@@ -120,7 +120,11 @@ UCI_STRUCTURED_FEATURES = [
 
 # Fields derived from the target; excluded for the task they leak.
 TARGET_DERIVED = {
-    "category": ["category", "subcategory", "u_symptom"],  # sub-fields are nested under category
+    "category": [
+        "category",
+        "subcategory",
+        "u_symptom",
+    ],  # sub-fields are nested under category
     "assignment_group": ["assignment_group"],
     "priority": ["priority"],
 }

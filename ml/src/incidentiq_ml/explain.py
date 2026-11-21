@@ -53,7 +53,11 @@ def global_top_features(pipe, top: int = 10) -> dict[str, list[dict]]:
     for i, c in enumerate(classes):
         order = np.argsort(-coef[i])[:top]
         out[str(c)] = [
-            {"feature": str(names[j]).split("__", 1)[-1], "coef": round(float(coef[i][j]), 4)} for j in order
+            {
+                "feature": str(names[j]).split("__", 1)[-1],
+                "coef": round(float(coef[i][j]), 4),
+            }
+            for j in order
         ]
     return out
 
@@ -63,7 +67,12 @@ def permutation_groups(
 ) -> list[dict]:
     """Global importance: macro-F1 drop when one input column is shuffled (held-out data)."""
     r = permutation_importance(
-        model, X[columns], np.asarray(y), scoring="f1_macro", n_repeats=repeats, random_state=seed
+        model,
+        X[columns],
+        np.asarray(y),
+        scoring="f1_macro",
+        n_repeats=repeats,
+        random_state=seed,
     )
     rows = [
         {"column": c, "importance_mean": float(m), "importance_std": float(s)}

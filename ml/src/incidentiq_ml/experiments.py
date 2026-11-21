@@ -139,7 +139,13 @@ def calibrate_deploy(X, y, split: Split, entry: dict, groups, seed: int) -> tupl
     """Choose sigmoid vs isotonic on validation ECE, refit on train+val, report on test."""
     tr, va, te = split.train, split.val, split.test
     trva = np.concatenate([tr, va])
-    base = M.build_pipeline(entry["fs"], entry["algo"], {**entry["params"], "max_iter": 500}, entry["cols"], seed)
+    base = M.build_pipeline(
+        entry["fs"],
+        entry["algo"],
+        {**entry["params"], "max_iter": 500},
+        entry["cols"],
+        seed,
+    )
 
     def fit_cal(idx: np.ndarray, method: str) -> CalibratedClassifierCV:
         g = groups[idx] if groups is not None else None
@@ -158,7 +164,12 @@ def calibrate_deploy(X, y, split: Split, entry: dict, groups, seed: int) -> tupl
         "validation_ece_by_method": val_ece,
         "calibrated_test": M.calibration_metrics(p_te, cal.classes_, y.iloc[te]),
         "calibrated_macro_f1": float(
-            f1_score(y.iloc[te], cal.classes_[p_te.argmax(1)], average="macro", zero_division=0)
+            f1_score(
+                y.iloc[te],
+                cal.classes_[p_te.argmax(1)],
+                average="macro",
+                zero_division=0,
+            )
         ),
         "note": "SVM margins are never reported as probabilities; probabilities come only from calibration.",
     }
