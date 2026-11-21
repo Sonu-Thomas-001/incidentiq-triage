@@ -28,3 +28,10 @@ jobs:
         env:
           DATABASE_URL: sqlite:///./ci.db
       - run: python -m pytest
+      - name: ML package (lint + tests)
+        working-directory: ml
+        run: |
+          pip install -r requirements.txt
+          ruff check .
+          black --check .
+          python -m pytest
