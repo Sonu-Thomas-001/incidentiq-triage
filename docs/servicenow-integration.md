@@ -86,6 +86,12 @@ python -m uvicorn app.main:app
 
 Log in as `analyst@synthetic.example`, import a mock incident, run the workflow, approve, then preview and approve the sync.
 
+## Using the web UI
+
+- **ServiceNow** (sidebar, analyst/admin): connection status, remote incidents (search, state filter, pagination, **Import**) and assignment groups with their sys_ids.
+- **Admin Settings**: map each local team to a ServiceNow assignment group (admin only).
+- **Incident page** (imported incidents only): the *ServiceNow sync* panel. *Preview sync* shows the instance host, number, sys_id, target team, mode and the exact field changes. Approval requires ticking the confirmation box and typing the instance host. In `read_only` mode the panel shows that writes are disabled and offers no approve button. Sync history and audit events appear below.
+
 ## Privacy
 
 Imported text is stored in the local database and visible to local staff. Do not import real employee data into a shared demo. Basic auth is for a developer instance; prefer OAuth for anything beyond that.

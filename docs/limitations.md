@@ -25,7 +25,7 @@ Honest scope statement for the DA377 submission. Nothing here should be read as 
 13. **ServiceNow** was tested only against mocks, not a live instance. Basic auth is used for a developer instance.
 14. Auth is local (scrypt hashes, JWT bearer). There is no login rate limiting, refresh tokens, password change or user-admin API. SQLite only. The JWT lives in sessionStorage, which is exposed to any XSS.
 15. "Request review" in the UI is run-triage; the backend has no separate action. The incident Explorer has no team column or category filter; assignment-per-day trends are unavailable.
-16. The ServiceNow sync preview/approve flow exists in the API and client but has no UI.
+16. ServiceNow sync is available in the UI (ServiceNow page for browsing/importing; Sync panel on the incident page for preview and confirmed approval), but it has only been exercised against the mock client and `httpx.MockTransport`, never a live Personal Developer Instance.
 17. Docker files are untested (Docker was unavailable); the lock file was built on Python 3.13.7 only.
 18. The frontend main bundle is about 594 kB (Recharts is split out, zod and the router are not).
 
