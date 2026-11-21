@@ -16,9 +16,7 @@ _DUMMY_HASH: str | None = None
 def hash_password(password: str) -> str:
     salt = os.urandom(16)
     digest = hashlib.scrypt(password.encode(), salt=salt, n=_N, r=_R, p=_P)
-    return "scrypt${}${}".format(
-        base64.b64encode(salt).decode(), base64.b64encode(digest).decode()
-    )
+    return f"scrypt${base64.b64encode(salt).decode()}${base64.b64encode(digest).decode()}"
 
 
 def verify_password(password: str, stored: str) -> bool:

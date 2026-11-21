@@ -3,9 +3,9 @@ from datetime import datetime
 from typing import Any
 
 from sqlalchemy import (
+    DDL,
     JSON,
     Boolean,
-    DDL,
     Enum,
     Float,
     ForeignKey,
