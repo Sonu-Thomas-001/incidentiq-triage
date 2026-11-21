@@ -4,11 +4,12 @@
 
 An explainable machine learning framework for automated IT incident classification, priority prediction and team assignment (IIT Guwahati, DA377).
 
-## Phase 1 status (backend foundation)
+## Status
 
-Implemented: schema + migrations, local auth with RBAC, incident lifecycle with audit trail and optimistic concurrency, REST API, synthetic seed data, tests.
+- **Phase 1 (backend):** schema + migrations, local auth with RBAC, incident lifecycle with audit trail and optimistic concurrency, REST API, synthetic seed data, tests.
+- **Phase 2 (ML pipeline):** dataset provenance, validation, EDA, leakage-aware splits, baselines, TF-IDF + Logistic Regression / Linear SVM, ablation, calibration, explainability, joblib artifacts, and `POST /incidents/{id}/triage` backed by the trained models. See [Phase 2](#phase-2-data-science-and-ml-pipeline) and [docs/report/](docs/report/).
 
-**Not implemented yet: any ML model.** `POST /incidents/{id}/triage` returns `status: NOT_READY` with `is_demo: false`; no category, priority, team, probability or metric is ever invented. `GET /models/metrics` returns `NOT_READY` until a model is registered in `model_versions`. All seeded data is **synthetic** (`is_synthetic = true`, titles prefixed `[SYNTHETIC]`).
+If no model artifacts are present, triage returns `status: NOT_READY` (nothing is invented). All seeded incidents are **synthetic** (`is_synthetic = true`, titles prefixed `[SYNTHETIC]`).
 
 ## Layout
 
@@ -93,14 +94,14 @@ Canonical prefix `/api/v1`; `/api/...` is an unversioned alias. All endpoints ex
 | `POST /incidents` | any authenticated | creates `NEW`; text immutable |
 | `GET /incidents` | any (reporters: own only) | filters `status, priority, team_id, reporter_id, q, created_from, created_to`; `page`, `page_size` (1-100) |
 | `GET /incidents/{id}` | any (reporters: own only) | includes current assignment; predictions hidden from reporters |
-| `POST /incidents/{id}/triage` | TRIAGE_ANALYST, ADMIN | Phase 1: `NOT_READY`; `NEW -> TRIAGE_PENDING -> NEEDS_REVIEW` |
+| `POST /incidents/{id}/triage` | TRIAGE_ANALYST, ADMIN | optional `impact`, `urgency` (1-3); `NOT_READY` / `DEMO` / `MODEL`; `NEW -> TRIAGE_PENDING -> NEEDS_REVIEW`; recommendation only |
 | `POST /incidents/{id}/assign` | TRIAGE_ANALYST, ADMIN | from `NEW/TRIAGE_PENDING/NEEDS_REVIEW` -> `ASSIGNED` |
 | `POST /incidents/{id}/accept` | SUPPORT_ENGINEER (assigned team), ADMIN | `ASSIGNED/REASSIGNED -> ACCEPTED` |
 | `POST /incidents/{id}/override` | TRIAGE_ANALYST, ADMIN | requires `reason` and a different team -> `REASSIGNED` |
 | `GET /incidents/{id}/audit` | staff roles | append-only trail |
 | `GET /teams/{id}/queue` | staff (engineers: own team) | open assigned incidents |
 | `GET /analytics/overview` | TRIAGE_ANALYST, ADMIN | counts of recorded decisions only |
-| `GET /models/metrics` | TRIAGE_ANALYST, ADMIN | `NOT_READY` until a model is registered |
+| `GET /models/metrics` | TRIAGE_ANALYST, ADMIN | manifest metrics with provenance; `NOT_READY` if no artifacts |
 
 ### Lifecycle
 
@@ -129,6 +130,57 @@ Codes: `VALIDATION_ERROR` (422), `UNAUTHENTICATED` (401), `FORBIDDEN` (403), `NO
 - UUID keys, UTC timestamps, indexes, FKs (enforced via `PRAGMA foreign_keys=ON`), one current assignment per incident (partial unique index).
 - `routing_rules` is seeded (synthetic) but not yet consumed by any endpoint.
 
+## Phase 2: data science and ML pipeline
+
+Full methodology, provenance, limitations and tables: [docs/report/methodology.md](docs/report/methodology.md), [docs/report/evaluation_tables.md](docs/report/evaluation_tables.md); figures in `docs/report/figures/`, raw metrics in `docs/report/results/*.json`.
+
+### Run the pipeline
+
+Raw/processed data and model artifacts are git-ignored. Run from `ml/` (the backend venv already has the ML dependencies; otherwise `pip install -r ml/requirements.txt`).
+
+Windows PowerShell:
+
+```powershell
+cd ml
+$env:PYTHONPATH = "src"
+..\backend\.venv\Scripts\python -m incidentiq_ml download   # fetch public datasets, verify pinned SHA-256
+..\backend\.venv\Scripts\python -m incidentiq_ml all        # prepare + validate + eda + train (add --fast for a quick run)
+..\backend\.venv\Scripts\python -m pytest                   # ML tests
+```
+
+POSIX:
+
+```bash
+cd ml
+export PYTHONPATH=src
+python -m incidentiq_ml download
+python -m incidentiq_ml all
+python -m pytest
+```
+
+Individual stages: `prepare`, `validate`, `eda`, `train`. Artifacts go to `ml/artifacts/` (`manifest.json` + `*.joblib`).
+
+### Datasets
+
+| Dataset | Use | License |
+| --- | --- | --- |
+| Zenodo tickets ([10.5281/zenodo.7648117](https://doi.org/10.5281/zenodo.7648117)), 2,229 rows | category (REAL) | CC BY 4.0 |
+| UCI Incident Management Process Event Log ([10.24432/C57S4H](https://doi.org/10.24432/C57S4H)), 141,712 events / 24,918 incidents | group from structured fields; priority policy (REAL) | CC BY 4.0 |
+| Synthetic generator (`ml/src/incidentiq_ml/synthetic.py`) | text/team demo only (SYNTHETIC) | n/a |
+
+### Serving models in the API
+
+The backend loads artifacts from `MODEL_DIR` (default `<repo>/ml/artifacts`). **joblib files can execute code when loaded: only use artifacts you produced yourself.** The loader checks the path, the SHA-256 in `manifest.json` and scikit-learn/numpy versions, and otherwise reports the model as unavailable.
+
+Triage `status`: `NOT_READY` (no usable model), `DEMO` (at least one output comes from a model trained on synthetic data; the team model currently is), `MODEL` (only real-data models). Priority is a deterministic impact x urgency **policy**, returned only when `impact` and `urgency` are supplied. Results are recommendations; the incident goes to `NEEDS_REVIEW` and a human approves.
+
+### Headline measured results (single held-out test evaluation)
+
+- Real tickets category, grouped split, test macro-F1: majority 0.067, keyword 0.548, TF-IDF+LogReg 0.800, TF-IDF+LinearSVC 0.849 (LogReg was selected on validation and deployed).
+- Real UCI assignment group from structured fields, chronological split, 44 classes: majority 0.016, category map 0.174, best (all structured fields, LinearSVC) macro-F1 0.650, top-1 0.797, top-3 0.870.
+- Priority is a deterministic function of impact x urgency (0 violations in 141,712 events), so it is a policy, not a learned result.
+- Synthetic-demo results exist but reflect generator design and must not be read as real accuracy.
+
 ## Remaining work
 
-Phase 2+: dataset, feature pipeline, model training/registration, real triage + explanations, model metrics; Phase 4: React UI. Also: login rate limiting, refresh tokens/password change, user admin endpoints, PostgreSQL option.
+Phase 3: UI-facing hardening (e.g. threshold-based routing rules, retraining from `feedback_labels`); Phase 4: React UI. Also: login rate limiting, refresh tokens/password change, user admin endpoints, PostgreSQL option.
