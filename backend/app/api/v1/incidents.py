@@ -29,6 +29,7 @@ from app.schemas.incident import (
     TriageRequest,
     TriageResult,
 )
+from app.services import evaluation_service
 from app.services import incidents as svc
 
 router = APIRouter()
@@ -207,6 +208,13 @@ def analytics_overview(
     db: DbSession, _: Annotated[User, Depends(require_roles(*ANALYST_OR_ADMIN))]
 ) -> dict:
     return svc.analytics_overview(db)
+
+
+@router.get("/models/evaluations", tags=["models"])
+def models_evaluations(_: Annotated[User, Depends(require_roles(*ANALYST_OR_ADMIN))]) -> dict:
+    """Offline evaluation summaries (model comparison, confusion matrices, calibration) read from
+    the committed result files. Nothing is computed at request time."""
+    return evaluation_service.list_evaluations()
 
 
 @router.get("/models/metrics", response_model=ModelMetricsOut, tags=["models"])

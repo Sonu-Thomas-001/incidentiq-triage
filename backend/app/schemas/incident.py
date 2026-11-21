@@ -152,6 +152,15 @@ class AnalyticsOverview(BaseModel):
     unassigned: int
     model_status: str
     note: str
+    by_approved_category: dict[str, int] = Field(default_factory=dict)
+    incidents_per_day: dict[str, int] = Field(default_factory=dict)
+    assignments_total: int = 0
+    overrides_total: int = 0
+    override_rate: float | None = Field(default=None, description="null when no assignments exist")
+    predictions_total: int = 0
+    confidence_histogram: list[dict[str, Any]] = Field(
+        default_factory=list, description="Recorded prediction confidences only; empty if none."
+    )
 
 
 class ModelMetricsOut(BaseModel):

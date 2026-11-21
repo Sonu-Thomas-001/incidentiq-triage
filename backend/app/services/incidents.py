@@ -554,7 +554,39 @@ def analytics_overview(db: Session) -> dict:
     total = sum(statuses.values())
     synthetic = db.scalar(select(func.count()).where(Incident.is_synthetic)) or 0
     has_model = db.scalar(select(func.count()).select_from(ModelVersion)) or 0
+    categories = {
+        c or "UNSET": n
+        for c, n in db.execute(
+            select(Incident.approved_category, func.count()).group_by(Incident.approved_category)
+        )
+    }
+    per_day = {
+        str(d): n
+        for d, n in db.execute(
+            select(func.date(Incident.created_at), func.count())
+            .group_by(func.date(Incident.created_at))
+            .order_by(func.date(Incident.created_at))
+        )
+    }
+    assignments_total = db.scalar(select(func.count()).select_from(Assignment)) or 0
+    overrides_total = db.scalar(select(func.count()).where(Assignment.is_override)) or 0
+    confidences = [c for (c,) in db.execute(select(TriagePrediction.confidence)) if c is not None]
+    histogram = [
+        {
+            "bin": f"{i / 10:.1f}-{(i + 1) / 10:.1f}",
+            "count": sum(1 for c in confidences if min(int(c * 10), 9) == i),
+        }
+        for i in range(10)
+    ]
+    predictions_total = db.scalar(select(func.count()).select_from(TriagePrediction)) or 0
     return {
+        "by_approved_category": categories,
+        "incidents_per_day": per_day,
+        "assignments_total": assignments_total,
+        "overrides_total": overrides_total,
+        "override_rate": (overrides_total / assignments_total) if assignments_total else None,
+        "predictions_total": predictions_total,
+        "confidence_histogram": histogram if confidences else [],
         "total_incidents": total,
         "synthetic_incidents": synthetic,
         "by_status": dict(statuses),
