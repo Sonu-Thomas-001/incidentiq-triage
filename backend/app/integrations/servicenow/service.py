@@ -35,7 +35,6 @@ from app.integrations.servicenow.client import (
     ServiceNowClient,
     validate_sys_id,
 )
-from app.integrations.servicenow.mock import MockServiceNowClient
 from app.models import Assignment, Incident, SyncRecord, Team, User
 from app.models.enums import IncidentStatus, Role, SyncStatus
 from app.services import audit
@@ -44,9 +43,8 @@ from app.services import incidents as svc
 SYSTEM = "servicenow"
 IMPORT_USER_EMAIL = "servicenow-import@system.local"
 STALE_CLAIM = timedelta(minutes=5)
-WRITE_MODES = {"mock", "live"}
+WRITE_MODES = {"live"}
 
-_mock_client: MockServiceNowClient | None = None
 _client_override: Callable[[Settings], ServiceNowClient] | None = None
 
 
@@ -54,12 +52,6 @@ def set_client_factory(factory: Callable[[Settings], ServiceNowClient] | None) -
     """Test hook: inject a client (for example one built on httpx.MockTransport)."""
     global _client_override
     _client_override = factory
-
-
-def reset_mock() -> MockServiceNowClient:
-    global _mock_client
-    _mock_client = MockServiceNowClient()
-    return _mock_client
 
 
 def get_client(settings: Settings | None = None) -> ServiceNowClient:
@@ -70,8 +62,6 @@ def get_client(settings: Settings | None = None) -> ServiceNowClient:
         )
     if _client_override is not None:
         return _client_override(settings)
-    if settings.servicenow_mode == "mock":
-        return _mock_client or reset_mock()
     return _http_client(settings)
 
 
@@ -198,6 +188,53 @@ def set_team_mapping(
     return {"team_id": team.id, "team_name": team.name, "servicenow_group_sys_id": new}
 
 
+MAX_GROUP_IMPORT = 500
+
+
+def import_groups_as_teams(db: Session, actor: User) -> dict[str, Any]:
+    """Create one local team per active ServiceNow assignment group (idempotent, read-only remote)."""
+    s = get_settings()
+    client = get_client(s)
+    created: list[str] = []
+    skipped: list[dict[str, str]] = []
+    seen = 0
+    offset = 0
+    while seen < MAX_GROUP_IMPORT:
+        rows, _total = client.list_groups(limit=100, offset=offset)
+        if not rows:
+            break
+        for r in rows:
+            seen += 1
+            sys_id, name = r.get("sys_id"), (r.get("name") or "").strip()
+            if str(r.get("active")).lower() != "true" or not sys_id or not name:
+                continue
+            if db.scalar(select(Team).where(Team.servicenow_group_sys_id == sys_id)):
+                continue
+            if db.scalar(select(Team).where(Team.name == name[:100])):
+                skipped.append({"name": name, "reason": "a local team with this name exists"})
+                continue
+            db.add(
+                Team(
+                    name=name[:100],
+                    description=(r.get("description") or None) and str(r["description"])[:500],
+                    servicenow_group_sys_id=sys_id,
+                    is_synthetic=False,
+                )
+            )
+            created.append(name)
+        offset += len(rows)
+        if len(rows) < 100:
+            break
+    audit.record(
+        db,
+        event_type="SERVICENOW_GROUPS_IMPORTED",
+        actor_id=actor.id,
+        details={"instance_host": client.host, "created": created, "skipped": skipped},
+    )
+    db.commit()
+    return {"created": created, "skipped": skipped}
+
+
 # ---- import -------------------------------------------------------------------------------
 
 
@@ -246,7 +283,7 @@ def import_incident(db: Session, actor: User, sys_id: str) -> dict[str, Any]:
         title=title,
         description=description,
         reporter_id=_import_user(db).id,
-        is_synthetic=s.servicenow_mode == "mock",
+        is_synthetic=False,
         external_system=SYSTEM,
         external_sys_id=sys_id,
         external_number=mapped["number"],
@@ -429,7 +466,7 @@ def approve_sync(
     client = get_client(s)
     if not _writes_allowed(s):
         raise WriteDisabledError(
-            f"ServiceNow writes are disabled in '{s.servicenow_mode}' mode; use mock or live"
+            f"ServiceNow writes are disabled in '{s.servicenow_mode}' mode; set SERVICENOW_MODE=live"
         )
     rec = db.get(SyncRecord, sync_id)
     if rec is None or rec.incident_id != incident_id:

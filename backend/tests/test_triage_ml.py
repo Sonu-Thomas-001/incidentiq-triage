@@ -100,9 +100,9 @@ def build_artifact(model_dir: Path, key: str, labels: dict, *, demo: bool, templ
 
 @pytest.fixture
 def both_models(model_dir):
-    build_artifact(model_dir, "category_real", DOCS, demo=False, template="description")
+    build_artifact(model_dir, "category_servicenow", DOCS, demo=False, template="description")
     team_docs = {"Network": DOCS["Network"], "Apps": DOCS["Software"]}
-    build_artifact(model_dir, "team_synthetic", team_docs, demo=True, template="title_description")
+    build_artifact(model_dir, "team_servicenow", team_docs, demo=True, template="title_description")
     return model_dir
 
 
@@ -145,7 +145,7 @@ def test_demo_triage_returns_labelled_outputs_and_stays_a_recommendation(api, wo
         f["contribution"] > 0 for f in cat["explanation_features"]
     )
     assert prio["label"] == "P2" and prio["source"] == "policy"
-    assert body["model_versions"]["category"] == "category_real-test0001"
+    assert body["model_versions"]["category"] == "category_servicenow-test0001"
     assert 0 < body["confidence"] <= 1 and body["decision_evidence"]
     inc2 = body["incident"]
     assert inc2["status"] == "NEEDS_REVIEW"
@@ -163,13 +163,13 @@ def test_metrics_endpoint_reports_recorded_provenance(api, both_models):
     r = api.get("/models/metrics", "analyst").json()
     assert r["status"] == "AVAILABLE"
     by_name = {m["name"]: m for m in r["models"]}
-    assert by_name["category_real"]["metrics"]["provenance"] == "real"
-    assert by_name["team_synthetic"]["metrics"]["is_demo"] is True
-    assert by_name["team_synthetic"]["metrics"]["test_metrics"] == {"test_macro_f1": 0.5}
+    assert by_name["category_servicenow"]["metrics"]["provenance"] == "real"
+    assert by_name["team_servicenow"]["metrics"]["is_demo"] is True
+    assert by_name["team_servicenow"]["metrics"]["test_metrics"] == {"test_macro_f1": 0.5}
 
 
 def test_real_model_only_is_model_status_and_team_unavailable(api, model_dir):
-    build_artifact(model_dir, "category_real", DOCS, demo=False, template="description")
+    build_artifact(model_dir, "category_servicenow", DOCS, demo=False, template="description")
     body = _triage(api, _new_incident(api)).json()
     assert body["status"] == "MODEL" and body["is_demo"] is False
     assert body["outputs"]["team"]["available"] is False
@@ -188,7 +188,7 @@ def test_unknown_vocabulary_yields_unavailable_not_a_guess(api, both_models):
 
 
 def test_tampered_artifact_is_refused(api, both_models):
-    p = both_models / "category_real.joblib"
+    p = both_models / "category_servicenow.joblib"
     p.write_bytes(p.read_bytes() + b"x")
     ml_service.clear_cache()
     body = _triage(api, _new_incident(api)).json()
@@ -200,20 +200,23 @@ def test_tampered_artifact_is_refused(api, both_models):
 def test_manifest_path_traversal_is_refused(api, both_models):
     mpath = both_models / "manifest.json"
     m = json.loads(mpath.read_text())
-    m["models"]["category_real"]["file"] = "../evil.joblib"
+    m["models"]["category_servicenow"]["file"] = "../evil.joblib"
     mpath.write_text(json.dumps(m))
     ml_service.clear_cache()
     reg = ml_service.get_registry()
-    assert "category_real" not in reg.models and "plain file name" in reg.problems["category_real"]
+    assert (
+        "category_servicenow" not in reg.models
+        and "plain file name" in reg.problems["category_servicenow"]
+    )
 
 
 def test_library_version_mismatch_is_refused(api, both_models):
     mpath = both_models / "manifest.json"
     m = json.loads(mpath.read_text())
-    m["models"]["team_synthetic"]["library_versions"]["scikit-learn"] = "0.1.0"
+    m["models"]["team_servicenow"]["library_versions"]["scikit-learn"] = "0.1.0"
     mpath.write_text(json.dumps(m))
     ml_service.clear_cache()
-    assert "library mismatch" in ml_service.get_registry().problems["team_synthetic"]
+    assert "library mismatch" in ml_service.get_registry().problems["team_servicenow"]
 
 
 def test_priority_policy_edges(api, both_models):

@@ -40,8 +40,8 @@ POLICY_LABELS = {
     "P4": "4 - Low",
 }
 
-CATEGORY_KEY = "category_real"
-TEAM_KEY = "team_synthetic"
+CATEGORY_KEY = "category_servicenow"
+TEAM_KEY = "team_servicenow"
 TOP_ALTERNATIVES = 3
 TOP_FEATURES = 8
 

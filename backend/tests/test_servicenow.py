@@ -12,8 +12,9 @@ from app.integrations.servicenow.client import (
     normalize_instance_url,
     sanitize_query_text,
 )
-from app.integrations.servicenow.mock import GROUPS, INCIDENTS
 from app.models import AuditEvent, Incident, SyncRecord
+
+from .fake_servicenow import GROUPS, INCIDENTS, MockServiceNowClient
 
 INC1 = INCIDENTS[0]["sys_id"]  # state New
 INC_CLOSED = INCIDENTS[2]["sys_id"]
@@ -24,9 +25,11 @@ BASE = "/integrations/servicenow"
 @pytest.fixture
 def mock_mode(monkeypatch):
     monkeypatch.setenv("SERVICENOW_ENABLED", "true")
-    monkeypatch.setenv("SERVICENOW_MODE", "mock")
+    monkeypatch.setenv("SERVICENOW_MODE", "live")
+    monkeypatch.setenv("SERVICENOW_INSTANCE_URL", "https://fake.service-now.com")
     get_settings.cache_clear()
-    client = sn.reset_mock()
+    client = MockServiceNowClient()
+    sn.set_client_factory(lambda s: client)
     yield client
     sn.set_client_factory(None)
     get_settings.cache_clear()
@@ -158,7 +161,7 @@ def test_import_is_idempotent_and_keeps_snapshot_separate_from_decisions(
     with session_factory() as db:
         assert db.scalar(select(func.count()).select_from(Incident)) == 1
         inc = db.scalar(select(Incident))
-        assert inc.status.value == "NEW" and inc.is_synthetic is True
+        assert inc.status.value == "NEW" and inc.is_synthetic is False
         assert inc.approved_priority is None  # SN priority is a snapshot, not a decision
         assert inc.external_snapshot["snapshot_priority"] == "P3"
         events = [e.event_type for e in db.scalars(select(AuditEvent))]
@@ -170,6 +173,25 @@ def test_incident_response_exposes_external_reference(api, world, mock_mode):
     body = api.get(f"/incidents/{inc_id}", "analyst").json()
     assert body["external_system"] == "servicenow"
     assert body["external_number"] == "INC9000001"
+
+
+def test_import_groups_creates_mapped_teams_idempotently_admin_only(
+    api, world, mock_mode, session_factory
+):
+    assert api.post(f"{BASE}/assignment-groups/import", "analyst", {}).status_code == 403
+    first = api.post(f"{BASE}/assignment-groups/import", "admin", {}).json()
+    second = api.post(f"{BASE}/assignment-groups/import", "admin", {}).json()
+    assert sorted(first["created"]) == sorted(g["name"] for g in GROUPS) and second["created"] == []
+    from app.models import Team
+
+    with session_factory() as db:
+        mapped = {
+            t.servicenow_group_sys_id: t
+            for t in db.scalars(select(Team))
+            if t.servicenow_group_sys_id
+        }
+        assert set(mapped) == {g["sys_id"] for g in GROUPS}
+        assert all(not t.is_synthetic for t in mapped.values())
 
 
 def test_http_client_is_reused_for_same_settings(monkeypatch):

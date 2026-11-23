@@ -53,6 +53,12 @@ def assignment_groups(user: Analyst, paging: Paging) -> dict[str, Any]:
     return service.list_remote_groups(paging.page, paging.page_size)
 
 
+@router.post("/assignment-groups/import")
+def import_groups(db: DbSession, user: Admin) -> dict[str, Any]:
+    """ADMIN: create a local team (mapped by sys_id) for each active ServiceNow assignment group."""
+    return service.import_groups_as_teams(db, user)
+
+
 @router.post("/import")
 def import_incident(body: ServiceNowImportRequest, db: DbSession, user: Analyst) -> dict[str, Any]:
     """Import one open ServiceNow incident as a local NEW incident (read-only toward ServiceNow).

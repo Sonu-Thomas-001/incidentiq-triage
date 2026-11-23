@@ -1,4 +1,4 @@
-"""In-memory synthetic ServiceNow used for mock mode and offline tests. All data is fabricated."""
+"""In-memory fake ServiceNow for offline tests only (never reachable from the running app). All data is fabricated."""
 
 from __future__ import annotations
 

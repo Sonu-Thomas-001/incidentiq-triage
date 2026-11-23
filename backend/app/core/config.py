@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     demo_password: str = ""
     # Directory with trained-model artifacts + manifest.json (produced by `python -m incidentiq_ml train`).
     # Only point this at artifacts you produced yourself: joblib files can execute code when loaded.
-    evaluation_dir: str = str(Path(__file__).resolve().parents[3] / "docs" / "report" / "results")
+    evaluation_dir: str = str(Path(__file__).resolve().parents[3] / "ml" / "artifacts" / "results")
     model_dir: str = str(Path(__file__).resolve().parents[3] / "ml" / "artifacts")
 
     # Routing policy (Phase 3). Disabled by default: until thresholds are validated on held-out
@@ -46,8 +46,8 @@ class Settings(BaseSettings):
 
     # ServiceNow (user-owned Personal Developer Instance). Off by default; secrets stay server-side.
     servicenow_enabled: bool = False
-    # read_only (default): GETs only. mock: in-memory synthetic instance. live: PATCH allowed.
-    servicenow_mode: Literal["read_only", "mock", "live"] = "read_only"
+    # read_only (default): GETs only. live: PATCH of the approved assignment group allowed.
+    servicenow_mode: Literal["read_only", "live"] = "read_only"
     servicenow_instance_url: str | None = None
     servicenow_auth: Literal["basic", "oauth"] = "basic"
     servicenow_username: str | None = None

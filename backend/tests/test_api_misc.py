@@ -101,6 +101,25 @@ def test_alembic_migration_creates_schema_and_triggers(tmp_path):
     con.close()
 
 
+def test_seed_without_flag_creates_accounts_but_no_incidents(tmp_path):
+    import os
+
+    db = tmp_path / "seed2.db"
+    env = {
+        **os.environ,
+        "DATABASE_URL": f"sqlite:///{db.as_posix()}",
+        "DEMO_PASSWORD": "seed-test-pw-123",
+    }
+    for cmd in (["-m", "alembic", "upgrade", "head"], ["-m", "app.db.seed"]):
+        subprocess.run(
+            [sys.executable, *cmd], cwd=BACKEND, env=env, check=True, capture_output=True
+        )
+    con = sqlite3.connect(db)
+    assert con.execute("select count(*) from incidents").fetchone()[0] == 0
+    assert con.execute("select count(*) from users").fetchone()[0] == 5
+    con.close()
+
+
 def test_seed_is_idempotent_and_synthetic(tmp_path):
     import os
 
@@ -110,7 +129,8 @@ def test_seed_is_idempotent_and_synthetic(tmp_path):
         "DATABASE_URL": f"sqlite:///{db.as_posix()}",
         "DEMO_PASSWORD": "seed-test-pw-123",
     }
-    for cmd in (["-m", "alembic", "upgrade", "head"], ["-m", "app.db.seed"], ["-m", "app.db.seed"]):
+    seed_cmd = ["-m", "app.db.seed", "--with-demo-incidents"]
+    for cmd in (["-m", "alembic", "upgrade", "head"], seed_cmd, seed_cmd):
         subprocess.run(
             [sys.executable, *cmd], cwd=BACKEND, env=env, check=True, capture_output=True
         )

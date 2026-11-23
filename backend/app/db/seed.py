@@ -1,9 +1,13 @@
-"""Seed SYNTHETIC demo users, teams, routing rules and incidents.
+"""Seed SYNTHETIC demo login accounts, teams and routing rules; demo incidents only on request.
 
-Usage (after `alembic upgrade head`):  python -m app.db.seed
-All seeded records are flagged is_synthetic=True. No real data or credentials are used.
+Usage (after `alembic upgrade head`):
+    python -m app.db.seed                         accounts, teams, rules (no incidents)
+    python -m app.db.seed --with-demo-incidents   also 12 synthetic offline-fallback incidents
+Incident data is meant to come from ServiceNow (see docs/servicenow-integration.md). Everything
+seeded here is flagged is_synthetic=True. No real data or credentials are used.
 """
 
+import argparse
 import secrets
 
 from sqlalchemy import select
@@ -101,7 +105,7 @@ INCIDENTS = [
 ]
 
 
-def seed(db: Session) -> str | None:
+def seed(db: Session, with_incidents: bool = False) -> str | None:
     settings = get_settings()
     password = settings.demo_password
     generated = None
@@ -147,7 +151,10 @@ def seed(db: Session) -> str | None:
             )
     db.commit()
 
-    if db.scalar(select(Incident.id).where(Incident.is_synthetic).limit(1)) is None:
+    if (
+        with_incidents
+        and db.scalar(select(Incident.id).where(Incident.is_synthetic).limit(1)) is None
+    ):
         _seed_incidents(db, users, teams)
     return generated if created_users else None
 
@@ -206,9 +213,17 @@ def _seed_incidents(db: Session, users: dict[Role, User], teams: dict[str, Team]
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--with-demo-incidents", action="store_true", help="also seed synthetic incidents"
+    )
+    args = ap.parse_args()
     with SessionLocal() as db:
-        generated = seed(db)
-    print("Seeded SYNTHETIC demo data.")
+        generated = seed(db, with_incidents=args.with_demo_incidents)
+    print(
+        "Seeded SYNTHETIC demo accounts/teams"
+        + (" and incidents." if args.with_demo_incidents else ".")
+    )
     if generated:
         print(f"Generated demo password (shown once, store it safely): {generated}")
     else:
