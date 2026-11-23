@@ -34,7 +34,7 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 Copy-Item ..\.env.example .env      # then edit; see "Configuration"
 alembic upgrade head
-python -m app.db.seed               # prints a generated demo password once
+python -m app.db.seed               # accounts/teams only (--with-demo-incidents adds optional synthetic incidents); prints a generated demo password once
 uvicorn app.main:app --reload
 ```
 
@@ -131,6 +131,19 @@ Codes: `VALIDATION_ERROR` (422), `UNAUTHENTICATED` (401), `FORBIDDEN` (403), `NO
 - UUID keys, UTC timestamps, indexes, FKs (enforced via `PRAGMA foreign_keys=ON`), one current assignment per incident (partial unique index).
 - `routing_rules` is seeded (synthetic) but not yet consumed by any endpoint.
 
+## Data policy: ServiceNow only
+
+The application's operational data and trained models come **only from your own ServiceNow developer instance**. Synthetic data is an optional offline fallback (`python -m app.db.seed --with-demo-incidents`, off by default). The legacy public-dataset and synthetic pipeline below (and the results in `docs/report/results`) is kept only as historical, clearly labelled research material.
+
+```powershell
+# backend/.env: SERVICENOW_ENABLED=true, SERVICENOW_MODE=read_only, SERVICENOW_INSTANCE_URL, SERVICENOW_USERNAME, SERVICENOW_PASSWORD
+cd ml; $env:PYTHONPATH="src"
+..\backend\.venv\Scripts\python -m incidentiq_ml servicenow-pull    # GET-only; writes git-ignored files under ml/data
+..\backend\.venv\Scripts\python -m incidentiq_ml servicenow-train   # category, team and priority-policy; results in ml/artifacts/results
+```
+
+Training needs at least 150 labelled incidents and at least 2 classes with 20+ rows each; otherwise that task is skipped and triage keeps returning `NOT_READY`. Labels are the values stored at pull time and may reflect later reassignment. Then restart the backend, sign in as admin and use the ServiceNow page to create teams from your assignment groups.
+
 ## Phase 2: data science and ML pipeline
 
 Full methodology, provenance, limitations and tables: [docs/report/methodology.md](docs/report/methodology.md), [docs/report/evaluation_tables.md](docs/report/evaluation_tables.md); figures in `docs/report/figures/`, raw metrics in `docs/report/results/*.json`.
@@ -204,8 +217,8 @@ privacy limits: [docs/architecture/phase3-workflow.md](docs/architecture/phase3-
 
 Configuration variables (all in `.env.example`): `ROUTING_*`, `GEMINI_*`, `GOOGLE_API_KEY`,
 `SERVICENOW_*`. Routing is disabled by default and never auto-assigns. ServiceNow writes need
-`SERVICENOW_MODE=live` (or `mock`), a preview, explicit confirmation and the instance host. The
-ServiceNow client has been tested only against mocks, not a live instance.
+`SERVICENOW_MODE=live`, a preview, explicit confirmation and the instance host. The
+ServiceNow client has been tested only against test fakes, not a live instance.
 
 ## Phase 4: React frontend
 

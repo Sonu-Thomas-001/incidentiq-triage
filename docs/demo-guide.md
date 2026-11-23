@@ -54,9 +54,9 @@ Password: the `DEMO_PASSWORD` you used at setup (or the one printed once by the 
 9. As `analyst`/`admin` open **Overview** (counts, override rate, confidence histogram) and **Analytics** (measured model tables; DEMO experiments are labelled).
 10. As `admin` open **Admin Settings** for team mappings, thresholds and ServiceNow/Gemini status.
 
-## 5. Optional: mock ServiceNow
+## 5. ServiceNow (your developer instance)
 
-Set in `backend/.env`: `SERVICENOW_ENABLED=true`, `SERVICENOW_MODE=mock`, restart the backend. Use `/docs` (login as analyst): list and import a mock incident, run the workflow, approve, `sync/preview` and `sync/approve`. See [servicenow-integration.md](servicenow-integration.md).
+Set in `backend/.env`: `SERVICENOW_ENABLED=true`, `SERVICENOW_MODE=read_only` plus `SERVICENOW_INSTANCE_URL`/`SERVICENOW_USERNAME`/`SERVICENOW_PASSWORD`, restart the backend. Use the ServiceNow page: list and import an incident, run the workflow, approve, `sync/preview` and `sync/approve`. See [servicenow-integration.md](servicenow-integration.md).
 
 ## 6. Automated checks
 

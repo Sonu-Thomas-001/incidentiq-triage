@@ -1,13 +1,12 @@
 # ServiceNow integration
 
-The adapter targets a **user-owned ServiceNow Personal Developer Instance** through the Table API. It is optional, off by default, and has been verified only against mocks (`httpx.MockTransport` and an in-memory instance), never against a live instance. No ServiceNow data is committed to this repository, and imported sample incidents are not used as training data.
+The adapter targets a **user-owned ServiceNow Personal Developer Instance** through the Table API. It is optional, off by default, and has been verified only against test fakes (`httpx.MockTransport` and a fake client in `backend/tests`), not yet against a live instance. ServiceNow is the project's only data source: incidents are pulled from your own instance (`python -m incidentiq_ml servicenow-pull`, then `servicenow-train`). Training needs at least 150 labelled incidents and 2 classes with 20+ rows each; otherwise the task is skipped and triage stays NOT_READY. Pulled data is git-ignored and never committed. Admins can create local teams from ServiceNow groups (`POST /integrations/servicenow/assignment-groups/import`).
 
 ## Modes
 
 | `SERVICENOW_MODE` | Behaviour |
 |---|---|
 | `read_only` (default) | GET only; writes blocked |
-| `mock` | in-memory synthetic instance, no network; allows the full preview/approve flow for demos and tests |
 | `live` | PATCH `assignment_group` allowed after explicit approval |
 
 `SERVICENOW_ENABLED=false` makes every integration endpoint return `503 INTEGRATION_DISABLED`.
@@ -70,7 +69,7 @@ sequenceDiagram
   API->>DB: SUCCEEDED or FAILED + audit
 ```
 
-Guards: writes need mode `mock` or `live`; the typed host must match the target instance; the remote `sys_updated_on` must equal the preview (else `409 REMOTE_CHANGED`); an already-applied group is recorded without a PATCH; replays are no-ops; the idempotency key covers (host, sys_id, assignment, group). A failed sync is stored as `FAILED` and never removes the local approval, and it can be retried. Model inference never writes to ServiceNow.
+Guards: writes need mode `live`; the typed host must match the target instance; the remote `sys_updated_on` must equal the preview (else `409 REMOTE_CHANGED`); an already-applied group is recorded without a PATCH; replays are no-ops; the idempotency key covers (host, sys_id, assignment, group). A failed sync is stored as `FAILED` and never removes the local approval, and it can be retried. Model inference never writes to ServiceNow.
 
 ## Reliability
 
@@ -80,11 +79,11 @@ Timeouts, bounded retries with backoff for transient errors, `Retry-After` handl
 
 ```powershell
 cd backend
-$env:SERVICENOW_ENABLED="true"; $env:SERVICENOW_MODE="mock"
+$env:SERVICENOW_ENABLED="true"; $env:SERVICENOW_MODE="read_only"
 python -m uvicorn app.main:app
 ```
 
-Log in as `analyst@synthetic.example`, import a mock incident, run the workflow, approve, then preview and approve the sync.
+Log in as `analyst@synthetic.example`, import an incident from your instance, run the workflow, approve, then preview and approve the sync.
 
 ## Using the web UI
 
