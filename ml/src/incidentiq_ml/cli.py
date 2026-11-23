@@ -1,4 +1,4 @@
-"""Command line: python -m incidentiq_ml {download|prepare|validate|eda|train|all}."""
+"""Command line: `servicenow-pull` then `servicenow-train` (primary); other commands are the legacy public-data pipeline."""
 
 from __future__ import annotations
 
@@ -12,7 +12,10 @@ from . import validation as V
 
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="incidentiq_ml")
-    ap.add_argument("command", choices=["download", "prepare", "validate", "eda", "train", "all"])
+    ap.add_argument(
+        "command",
+        choices=["servicenow-pull", "servicenow-train", "download", "prepare", "validate", "eda", "train", "all"],
+    )
     ap.add_argument(
         "--fast",
         action="store_true",
@@ -22,7 +25,17 @@ def main(argv: list[str] | None = None) -> None:
     ns = ap.parse_args(argv)
     cmds = ["download", "prepare", "validate", "eda", "train"] if ns.command == "all" else [ns.command]
     for c in cmds:
-        if c == "download":
+        if c == "servicenow-pull":
+            from . import servicenow_data
+
+            print(servicenow_data.pull())
+        elif c == "servicenow-train":
+            from . import servicenow_tasks
+
+            status = servicenow_tasks.run_all(fast=ns.fast, model_dir=ns.model_dir or C.ARTIFACT_DIR)
+            for task, info in status["tasks"].items():
+                print(f"  {task}: {info['status']} {info.get('reason', '')}")
+        elif c == "download":
             data.download_all()
         elif c == "prepare":
             print(data.prepare_all())

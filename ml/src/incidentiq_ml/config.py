@@ -11,6 +11,9 @@ PROCESSED_DIR = ML_ROOT / "data" / "processed"
 ARTIFACT_DIR = ML_ROOT / "artifacts"
 RESULTS_DIR = REPO_ROOT / "docs" / "report" / "results"
 FIGURES_DIR = REPO_ROOT / "docs" / "report" / "figures"
+# ServiceNow-derived outputs come from private instance data, so they stay in git-ignored paths.
+SN_RESULTS_DIR = ARTIFACT_DIR / "results"
+SN_FIGURES_DIR = ARTIFACT_DIR / "figures"
 
 SEED = 42
 ACCESS_DATE = "2026-11-21"
