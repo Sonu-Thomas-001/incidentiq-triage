@@ -94,4 +94,6 @@ export const api = {
     request("/integrations/servicenow/assignment-groups", { query: { page, page_size: 50 }, schema: snPageSchema }),
   snImport: (sys_id: string) =>
     request("/integrations/servicenow/import", { method: "POST", body: { sys_id }, schema: looseRecord }),
+  snImportGroups: () =>
+    request("/integrations/servicenow/assignment-groups/import", { method: "POST", body: {}, schema: looseRecord }),
 };

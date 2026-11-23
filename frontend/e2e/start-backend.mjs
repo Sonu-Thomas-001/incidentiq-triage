@@ -17,7 +17,7 @@ const env = {
   SERVICENOW_ENABLED: "false",
   GEMINI_ENABLED: "false",
 };
-for (const args of [["-m", "alembic", "upgrade", "head"], ["-m", "app.db.seed"]]) {
+for (const args of [["-m", "alembic", "upgrade", "head"], ["-m", "app.db.seed", "--with-demo-incidents"]]) {
   const r = spawnSync(py, args, { cwd: backend, env, stdio: "inherit" });
   if (r.status !== 0) process.exit(r.status ?? 1);
 }

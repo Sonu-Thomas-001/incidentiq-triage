@@ -102,7 +102,7 @@ export function SyncPanel({ incidentId, number, hasAssignment }: { incidentId: s
             </div>
             {!writesAllowed ? (
               <p role="alert" className="flex items-start gap-2 rounded-lg bg-amber-100 px-3 py-2 text-xs text-amber-900">
-                <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden /> Writes are disabled in “{String(preview.mode)}” mode. Switch the server to mock or live to apply.
+                <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden /> Writes are disabled in “{String(preview.mode)}” mode. Switch the server to <code>SERVICENOW_MODE=live</code> to apply.
               </p>
             ) : (
               <div className="space-y-2">

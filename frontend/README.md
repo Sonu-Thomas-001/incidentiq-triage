@@ -33,7 +33,7 @@ npm run dev        # http://localhost:5173
 
 `VITE_API_BASE_URL` (default `http://localhost:8000/api/v1`) selects the backend. The backend's
 `CORS_ORIGINS` must include the frontend origin (`http://localhost:5173` is the default).
-Optional mock ServiceNow for the Admin page: `SERVICENOW_ENABLED=true SERVICENOW_MODE=mock`.
+ServiceNow (optional): `SERVICENOW_ENABLED=true SERVICENOW_MODE=read_only` plus your instance URL and credentials in `backend/.env`.
 
 Sign in with a synthetic account (`reporter@`, `analyst@`, `engineer.network@`, `engineer.apps@`, `admin@synthetic.example`)
 and the `DEMO_PASSWORD` you seeded. No API keys or ServiceNow credentials are ever in browser code.

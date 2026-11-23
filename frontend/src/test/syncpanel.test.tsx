@@ -6,11 +6,11 @@ import { renderApp } from "./utils";
 
 const preview = (over: Record<string, unknown> = {}) => ({
   sync_id: "s-1",
-  target_instance_host: "mock.service-now.com",
+  target_instance_host: "dev1.service-now.com",
   external_number: "INC9000001",
   external_sys_id: "abc",
   target_team: "Network Operations",
-  mode: "mock",
+  mode: "live",
   writes_allowed: true,
   field_changes: { assignment_group: { from: "old", to: "new" } },
   ...over,
@@ -31,7 +31,7 @@ describe("SyncPanel", () => {
     expect(approve).toBeDisabled();
     await user.click(screen.getByRole("checkbox"));
     expect(approve).toBeDisabled();
-    await user.type(screen.getByLabelText(/type the instance host/i), "mock.service-now.com");
+    await user.type(screen.getByLabelText(/type the instance host/i), "dev1.service-now.com");
     await waitFor(() => expect(approve).toBeEnabled());
   });
 

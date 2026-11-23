@@ -8,6 +8,7 @@ import { Pagination } from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Badge, Card, CardContent, CardHeader, CardTitle, Input, Select } from "@/components/ui/primitives";
 import { ApiError } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/endpoints";
 
 const STATES = [
@@ -46,6 +47,18 @@ export default function ServiceNowPage() {
     onError: (e) => toast.error(errorMessage(e)),
   });
 
+  const doImportGroups = useMutation({
+    mutationFn: api.snImportGroups,
+    onSuccess: (r) => {
+      const n = (r.created as unknown[] | undefined)?.length ?? 0;
+      toast.success(n ? `Created ${n} team${n === 1 ? "" : "s"} from ServiceNow groups` : "Teams already match ServiceNow groups");
+      qc.invalidateQueries({ queryKey: ["teams"] });
+      qc.invalidateQueries({ queryKey: ["sn-mappings"] });
+    },
+    onError: (e) => toast.error(errorMessage(e)),
+  });
+  const { hasRole } = useAuth();
+
   const h = health.data ?? {};
 
   return (
@@ -60,8 +73,8 @@ export default function ServiceNowPage() {
         <CardContent className="text-sm">
           {health.isPending ? <CardSkeleton rows={1} /> : health.isError ? <ErrorState error={health.error} onRetry={() => health.refetch()} /> : disabled ? (
             <p className="text-slate-600">
-              Disabled on the server (<code>SERVICENOW_ENABLED=false</code>). Set it to <code>true</code> in <code>backend/.env</code> with <code>SERVICENOW_MODE=mock</code> for a safe local demo, or
-              configure your developer instance and use <code>read_only</code>. See docs/servicenow-integration.md.
+              Disabled on the server (<code>SERVICENOW_ENABLED=false</code>). Set it to <code>true</code> in <code>backend/.env</code> together with your developer instance URL and
+              credentials, starting with <code>SERVICENOW_MODE=read_only</code>. See docs/servicenow-integration.md.
             </p>
           ) : (
             <dl className="grid gap-x-6 gap-y-1 text-xs sm:grid-cols-2 lg:grid-cols-4">
@@ -129,7 +142,12 @@ export default function ServiceNowPage() {
           <Card>
             <CardHeader><CardTitle>Assignment groups</CardTitle></CardHeader>
             <CardContent className="space-y-2 text-xs">
-              <p className="text-slate-500">Copy a sys_id into Admin Settings to map it to a local team.</p>
+              <p className="text-slate-500">Teams are mapped to these groups by sys_id. Admins can create the local teams from them.</p>
+              {hasRole("ADMIN") && (
+                <Button size="sm" variant="outline" disabled={doImportGroups.isPending} onClick={() => doImportGroups.mutate()}>
+                  {doImportGroups.isPending ? "Creating…" : "Create teams from groups"}
+                </Button>
+              )}
               {groups.isPending ? <CardSkeleton rows={2} /> : groups.isError ? <ErrorState error={groups.error} /> : (
                 <ul className="space-y-2">
                   {groups.data.items.map((g) => (
