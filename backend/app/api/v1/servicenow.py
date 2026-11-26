@@ -12,6 +12,7 @@ from app.schemas.servicenow import (
     SyncApproveRequest,
     TeamMappingRequest,
 )
+from app.services import autopilot
 
 router = APIRouter(prefix="/integrations/servicenow", tags=["servicenow"])
 Analyst = Annotated[User, Depends(require_roles(*ANALYST_OR_ADMIN))]
@@ -57,6 +58,18 @@ def assignment_groups(user: Analyst, paging: Paging) -> dict[str, Any]:
 def import_groups(db: DbSession, user: Admin) -> dict[str, Any]:
     """ADMIN: create a local team (mapped by sys_id) for each active ServiceNow assignment group."""
     return service.import_groups_as_teams(db, user)
+
+
+@router.get("/autopilot")
+def autopilot_status(user: Analyst) -> dict[str, Any]:
+    """Polling configuration and the result of the last cycle."""
+    return autopilot.status()
+
+
+@router.post("/autopilot/run")
+def autopilot_run(db: DbSession, user: Admin) -> dict[str, Any]:
+    """ADMIN: run one pickup/triage cycle now (same rules as the background poller)."""
+    return autopilot.run_cycle(db)
 
 
 @router.post("/import")

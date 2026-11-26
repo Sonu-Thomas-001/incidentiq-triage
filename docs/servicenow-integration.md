@@ -71,6 +71,24 @@ sequenceDiagram
 
 Guards: writes need mode `live`; the typed host must match the target instance; the remote `sys_updated_on` must equal the preview (else `409 REMOTE_CHANGED`); an already-applied group is recorded without a PATCH; replays are no-ops; the idempotency key covers (host, sys_id, assignment, group). A failed sync is stored as `FAILED` and never removes the local approval, and it can be retried. Model inference never writes to ServiceNow.
 
+## Autopilot (optional, off by default)
+
+With `AUTOPILOT_ENABLED=true` (and the ServiceNow integration enabled) the backend polls every
+`AUTOPILOT_INTERVAL_SECONDS` for tickets in state New with no assignment group, imports each once,
+and runs the triage workflow with the ticket's impact/urgency. Gemini is never called automatically.
+
+- Default outcome: the incident waits in `NEEDS_REVIEW` with a recommendation for an analyst.
+- With `AUTOPILOT_AUTO_ASSIGN=true` **and** `ROUTING_ENABLED=true`, an incident is assigned locally only
+  if the routing policy returns `PROPOSE_ASSIGNMENT` (calibrated confidence above both thresholds,
+  models trained on ServiceNow data, team maps to a local team). The decision is attributed to the
+  inactive system user `autopilot@system.local` and audited (`AUTOPILOT_AUTO_ASSIGNED`).
+- The autopilot never PATCHes ServiceNow. Writing the group back still needs the preview and
+  typed-host confirmation flow.
+- Admin can run one cycle via `POST /integrations/servicenow/autopilot/run`; status is at
+  `GET /integrations/servicenow/autopilot`.
+- Thresholds are not validated on independent data and the models are trained largely on
+  template-generated seed tickets, so treat auto-assignment as a demonstration.
+
 ## Reliability
 
 Timeouts, bounded retries with backoff for transient errors, `Retry-After` handling for HTTP 429, offset pagination, and mapped errors (auth, permission, not found, rate limit, timeout).

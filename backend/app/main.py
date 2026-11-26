@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import time
 import uuid
@@ -37,7 +38,19 @@ def create_app() -> FastAPI:
     @asynccontextmanager
     async def lifespan(_: FastAPI):
         logger.info("starting %s env=%s", settings.app_name, settings.app_env)
+        task = None
+        if settings.autopilot_enabled and settings.servicenow_enabled:
+            from app.services import autopilot
+
+            logger.info(
+                "autopilot on: every %ss, auto_assign=%s",
+                settings.autopilot_interval_seconds,
+                settings.autopilot_auto_assign,
+            )
+            task = asyncio.create_task(autopilot.poll_forever(settings.autopilot_interval_seconds))
         yield
+        if task is not None:
+            task.cancel()
 
     app = FastAPI(
         title=f"{settings.app_name} API",

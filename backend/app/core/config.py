@@ -49,6 +49,13 @@ class Settings(BaseSettings):
     gemini_max_retries: int = Field(default=2, ge=0, le=5)
     gemini_max_input_chars: int = Field(default=2000, ge=200, le=8000)
 
+    # Autopilot: poll ServiceNow for new unassigned tickets and triage them. Off by default.
+    autopilot_enabled: bool = False
+    # Also assign locally (audited, never written to ServiceNow) when the routing policy passes.
+    autopilot_auto_assign: bool = False
+    autopilot_interval_seconds: float = Field(default=300.0, ge=30, le=86400)
+    autopilot_max_per_cycle: int = Field(default=25, ge=1, le=100)
+
     # ServiceNow (user-owned Personal Developer Instance). Off by default; secrets stay server-side.
     servicenow_enabled: bool = False
     # read_only (default): GETs only. live: PATCH of the approved assignment group allowed.
