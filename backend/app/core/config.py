@@ -39,7 +39,12 @@ class Settings(BaseSettings):
     # never used for predictions, confidence or routing. Secrets are server-side only.
     gemini_enabled: bool = False
     google_api_key: SecretStr | None = None
-    gemini_model: str = "gemini-flash-latest"
+    gemini_model: str = "gemini-3.8-flash"
+    # Vertex AI with Application Default Credentials (no API key). Newer Gemini models are served
+    # from the "global" location.
+    google_genai_use_vertexai: bool = False
+    google_cloud_project: str | None = None
+    google_cloud_location: str = "global"
     gemini_timeout_seconds: float = Field(default=20.0, gt=0, le=120)
     gemini_max_retries: int = Field(default=2, ge=0, le=5)
     gemini_max_input_chars: int = Field(default=2000, ge=200, le=8000)

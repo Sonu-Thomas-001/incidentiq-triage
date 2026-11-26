@@ -99,14 +99,23 @@ class GeminiClient:
     def __init__(self, settings: Settings) -> None:
         from langchain_google_genai import ChatGoogleGenerativeAI
 
-        assert settings.google_api_key is not None
         self.model_name = settings.gemini_model
+        auth: dict[str, Any]
+        if settings.google_genai_use_vertexai:
+            auth = {
+                "vertexai": True,
+                "project": settings.google_cloud_project,
+                "location": settings.google_cloud_location,
+            }
+        else:
+            assert settings.google_api_key is not None
+            auth = {"google_api_key": settings.google_api_key.get_secret_value()}
         self._llm = ChatGoogleGenerativeAI(
             model=settings.gemini_model,
-            google_api_key=settings.google_api_key.get_secret_value(),
             temperature=0,
             timeout=settings.gemini_timeout_seconds,
             max_retries=0,  # retries are bounded and counted by assist()
+            **auth,
         ).with_structured_output(IncidentAssist)
 
     def extract(self, system_prompt: str, user_content: str) -> IncidentAssist:
@@ -117,7 +126,15 @@ class GeminiClient:
 ClientFactory = Callable[[Settings], LLMClient | None]
 
 
+def credentials_configured(settings: Settings) -> bool:
+    if settings.google_genai_use_vertexai:
+        return bool(settings.google_cloud_project)  # credentials come from ADC at call time
+    return bool(settings.google_api_key and settings.google_api_key.get_secret_value().strip())
+
+
 def _default_factory(settings: Settings) -> LLMClient | None:
+    if settings.google_genai_use_vertexai:
+        return GeminiClient(settings) if settings.google_cloud_project else None
     if settings.google_api_key is None or not settings.google_api_key.get_secret_value().strip():
         return None
     return GeminiClient(settings)
@@ -202,7 +219,8 @@ def assist(
         return _envelope("ERROR", f"Gemini client could not be created ({type(exc).__name__}).")
     if client is None:
         return _envelope(
-            "NO_CREDENTIALS", "GOOGLE_API_KEY is not configured; no external call was made."
+            "NO_CREDENTIALS",
+            "No Gemini credentials configured (API key or Vertex project); no external call was made.",
         )
 
     clean_title, t_counts = redact(title[:200])

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.errors import NotFoundError
 from app.models import Incident, User, WorkflowRun
-from app.services import routing_policy
+from app.services import llm_assist, routing_policy
 from app.workflow.graph import build_graph
 from app.workflow.nodes import WorkflowDeps
 
@@ -126,9 +126,8 @@ def effective_config() -> dict[str, Any]:
         "routing": routing_policy.RoutingConfig.from_settings(s).as_dict(),
         "gemini": {
             "enabled": s.gemini_enabled,
-            "credentials_configured": bool(
-                s.google_api_key and s.google_api_key.get_secret_value().strip()
-            ),
+            "credentials_configured": llm_assist.credentials_configured(s),
+            "auth": "vertex_adc" if s.google_genai_use_vertexai else "api_key",
             "model": s.gemini_model,
             "timeout_seconds": s.gemini_timeout_seconds,
             "max_retries": s.gemini_max_retries,
