@@ -14,8 +14,22 @@ def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="incidentiq_ml")
     ap.add_argument(
         "command",
-        choices=["servicenow-pull", "servicenow-train", "download", "prepare", "validate", "eda", "train", "all"],
+        choices=[
+            "servicenow-pull",
+            "servicenow-train",
+            "servicenow-seed",
+            "servicenow-unseed",
+            "download",
+            "prepare",
+            "validate",
+            "eda",
+            "train",
+            "all",
+        ],
     )
+    ap.add_argument("--count", type=int, default=300, help="servicenow-seed: incidents to create")
+    ap.add_argument("--apply", action="store_true", help="servicenow-seed/unseed: really write (default is a dry run)")
+    ap.add_argument("--confirm-host", default="", help="servicenow-seed/unseed: must equal the instance host")
     ap.add_argument(
         "--fast",
         action="store_true",
@@ -29,6 +43,14 @@ def main(argv: list[str] | None = None) -> None:
             from . import servicenow_data
 
             print(servicenow_data.pull())
+        elif c == "servicenow-seed":
+            from . import servicenow_seed
+
+            print(servicenow_seed.seed(ns.count, ns.apply, ns.confirm_host))
+        elif c == "servicenow-unseed":
+            from . import servicenow_seed
+
+            print(servicenow_seed.unseed(ns.apply, ns.confirm_host))
         elif c == "servicenow-train":
             from . import servicenow_tasks
 

@@ -144,6 +144,14 @@ cd ml; $env:PYTHONPATH="src"
 
 Training needs at least 150 labelled incidents and at least 2 classes with 20+ rows each; otherwise that task is skipped and triage keeps returning `NOT_READY`. Labels are the values stored at pull time and may reflect later reassignment. Then restart the backend, sign in as admin and use the ServiceNow page to create teams from your assignment groups.
 
+**Seeding a small instance (writes to ServiceNow).** A fresh developer instance has too few incidents. `servicenow-seed` creates template-generated **synthetic** incidents in your instance (category, impact, urgency, assignment group, `correlation_id=incidentiq-seed-NNNN`). It is a dry run unless you pass `--apply --confirm-host <instance host>`; `servicenow-unseed` deletes exactly those tagged rows. Models trained on seeded rows only show that they recover the generator's category-to-group mapping, so report such results as synthetic-in-ServiceNow, not as operational performance.
+
+```powershell
+..\backend\.venv\Scripts\python -m incidentiq_ml servicenow-seed                      # dry run
+..\backend\.venv\Scripts\python -m incidentiq_ml servicenow-seed --count 300 --apply --confirm-host <instance>.service-now.com
+..\backend\.venv\Scripts\python -m incidentiq_ml servicenow-unseed --apply --confirm-host <instance>.service-now.com
+```
+
 ## Phase 2: data science and ML pipeline
 
 Full methodology, provenance, limitations and tables: [docs/report/methodology.md](docs/report/methodology.md), [docs/report/evaluation_tables.md](docs/report/evaluation_tables.md); figures in `docs/report/figures/`, raw metrics in `docs/report/results/*.json`.
