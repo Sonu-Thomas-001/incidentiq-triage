@@ -385,7 +385,7 @@ def test_http_client_pagination_params_and_total():
         (401, "UPSTREAM_AUTH_FAILED", 502),
         (403, "UPSTREAM_FORBIDDEN", 502),
         (404, "UPSTREAM_NOT_FOUND", 404),
-        (500, "UPSTREAM_ERROR", 502),
+        (501, "UPSTREAM_ERROR", 502),
     ],
 )
 def test_http_client_maps_errors(status, code, http):
@@ -407,6 +407,30 @@ def test_http_client_retries_transient_then_succeeds():
     c, sleeps = _http(handler)
     assert c.get_incident("c" * 32)["sys_id"] == "c" * 32
     assert len(calls) == 3 and len(sleeps) == 2
+
+
+def test_http_client_retries_get_500_but_never_patch_500():
+    gets = []
+
+    def get_handler(req):
+        gets.append(1)
+        if len(gets) == 1:
+            return httpx.Response(500)
+        return httpx.Response(200, json={"result": {"sys_id": "c" * 32}})
+
+    c, _ = _http(get_handler)
+    assert c.get_incident("c" * 32)["sys_id"] == "c" * 32 and len(gets) == 2
+
+    patches = []
+
+    def patch_handler(req):
+        patches.append(1)
+        return httpx.Response(500)
+
+    c, _ = _http(patch_handler)
+    with pytest.raises(UpstreamError):
+        c.update_assignment_group("c" * 32, "d" * 32)
+    assert len(patches) == 1
 
 
 def test_http_client_rate_limit_and_timeout():

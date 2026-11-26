@@ -165,7 +165,11 @@ class HttpServiceNowClient:
                     retry_after=retry_after,
                 )
             # PATCH of a fixed value is idempotent, so retrying gateway errors is safe here.
-            if resp.status_code in RETRY_STATUSES and attempt < attempts:
+            retryable = resp.status_code in RETRY_STATUSES or (
+                resp.status_code == 500
+                and method == "GET"  # dev instances often 500 once after idle
+            )
+            if retryable and attempt < attempts:
                 self._sleep(min(retry_after or 0.5 * 2 ** (attempt - 1), MAX_RETRY_AFTER))
                 continue
             return self._check(resp)

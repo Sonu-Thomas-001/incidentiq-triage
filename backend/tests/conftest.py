@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.core.config import get_settings
+from app.core.config import Settings, get_settings
 from app.core.security import hash_password
 from app.db.base import Base
 from app.db.session import build_engine, get_db
@@ -16,6 +16,7 @@ from app.services import ml_service
 
 PASSWORD = "test-only-Passw0rd!"
 _HASH = hash_password(PASSWORD)  # hashed once; scrypt is deliberately slow
+Settings.model_config["env_file"] = None  # tests must never read a developer's real backend/.env
 
 
 @pytest.fixture(autouse=True)
