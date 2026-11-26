@@ -279,6 +279,7 @@ def build_index(records: list[dict[str, Any]], settings: Settings | None = None)
                     "team": r["team"],
                     "category": (r.get("category") or "").lower(),
                     "number": r.get("number") or "",
+                    "origin": r.get("origin") or "unknown",
                 }
                 for r in chunk
             ],

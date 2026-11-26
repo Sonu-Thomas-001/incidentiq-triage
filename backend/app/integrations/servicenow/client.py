@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 SYS_ID_RE = re.compile(r"^[0-9a-fA-F]{32}$")
 INCIDENT_FIELDS = (
     "sys_id,number,short_description,description,state,priority,impact,urgency,category,"
-    "assignment_group,sys_created_on,sys_updated_on"
+    "assignment_group,correlation_id,sys_created_on,sys_updated_on"
 )
 GROUP_FIELDS = "sys_id,name,description,active"
 MAX_RETRY_AFTER = 30.0

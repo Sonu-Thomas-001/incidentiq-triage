@@ -48,6 +48,12 @@ def to_local(record: dict[str, Any]) -> dict[str, Any]:
         "urgency": _scale(record.get("urgency")),
         "category": record.get("category") or None,
         "assignment_group_sys_id": ref_value(record.get("assignment_group")),
+        # Tickets created by `servicenow-seed` carry correlation_id=incidentiq-seed-NNNN.
+        "origin": (
+            "seed_script"
+            if str(record.get("correlation_id") or "").startswith("incidentiq-seed-")
+            else "native"
+        ),
         "created_on": record.get("sys_created_on") or None,
         "updated_on": record.get("sys_updated_on") or None,
     }
