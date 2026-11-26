@@ -1,10 +1,11 @@
-"""Routing policy: decides which review path an incident takes. It never assigns anything.
+"""Routing policy: decides which review path an incident takes. Assignment itself needs approval.
 
-- Uses only calibrated model confidence from the supervised models (never LLM output).
+- Uses only retrieval agreement from the local incident index (never LLM self-reported confidence).
 - Per-task thresholds are configuration (ROUTING_THRESHOLD_CATEGORY / _TEAM).
 - Disabled by default: with ROUTING_ENABLED=false every incident takes the standard review path.
-- Even when enabled, the best outcome is PROPOSE_ASSIGNMENT (a pre-filled suggestion for one-click
-  analyst approval). `auto_assign` is always False: a human approval is mandatory.
+- Even when enabled, the best outcome is PROPOSE_ASSIGNMENT: a pre-filled suggestion for one-click
+  analyst approval. `auto_assign` stays False here; the opt-in autopilot (AUTOPILOT_AUTO_ASSIGN) is
+  the only component that may act on a proposal, and it records an audited system approval.
 """
 
 from __future__ import annotations
@@ -41,9 +42,9 @@ def _check_task(task: str, out: dict[str, Any], threshold: float) -> dict[str, A
     if not out.get("available"):
         check["reason"] = f"{task}_prediction_unavailable"
     elif out.get("is_demo") or out.get("provenance") != "real":
-        check["reason"] = f"{task}_model_not_trained_on_real_data"
-    elif "calibrated" not in str(out.get("confidence_kind", "")):
-        check["reason"] = f"{task}_confidence_not_calibrated"
+        check["reason"] = f"{task}_not_based_on_servicenow_data"
+    elif out.get("confidence_kind") != "retrieval_agreement":
+        check["reason"] = f"{task}_confidence_not_retrieval_agreement"
     elif out.get("confidence") is None or out["confidence"] < threshold:
         check["confidence"] = out.get("confidence")
         check["reason"] = f"{task}_confidence_below_threshold"

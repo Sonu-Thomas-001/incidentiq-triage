@@ -32,7 +32,7 @@ from app.models.enums import (
     Priority,
     Role,
 )
-from app.services import audit, ml_service
+from app.services import audit, rag_service
 from app.services.lifecycle import ensure_transition
 
 STAFF_ROLES = {Role.TRIAGE_ANALYST, Role.SUPPORT_ENGINEER, Role.ADMIN}
@@ -199,7 +199,7 @@ def team_queue(
 def sync_model_versions(db: Session) -> dict[str, ModelVersion]:
     """Mirror artifact manifest entries into model_versions (idempotent); metrics are as measured."""
     out: dict[str, ModelVersion] = {}
-    for e in ml_service.manifest_entries():
+    for e in rag_service.manifest_entries():
         mv = db.scalar(
             select(ModelVersion).where(
                 ModelVersion.name == e["key"],
@@ -258,7 +258,13 @@ def request_triage(
         to_status=IncidentStatus.TRIAGE_PENDING,
     )
     ensure_transition(IncidentStatus.TRIAGE_PENDING, IncidentStatus.NEEDS_REVIEW)
-    result = ml_service.predict(incident.title, incident.description, impact, urgency)
+    result = rag_service.predict(
+        incident.title,
+        incident.description,
+        impact,
+        urgency,
+        exclude_id=incident.external_sys_id,
+    )
     prediction = record_prediction(db, actor, incident, result)
     db.commit()
     return incident, prediction, result
@@ -281,9 +287,9 @@ def record_prediction(
         team_id = db.scalar(select(Team.id).where(Team.name == outs["team"]["label"]))
     priority = Priority(outs["priority"]["label"]) if outs["priority"].get("available") else None
     primary = (
-        ml_service.CATEGORY_KEY
-        if outs["category"].get("available")
-        else ml_service.TEAM_KEY if outs["team"].get("available") else None
+        rag_service.RAG_KEY
+        if outs["category"].get("available") or outs["team"].get("available")
+        else None
     )
     prediction = TriagePrediction(
         incident_id=incident.id,
@@ -600,7 +606,7 @@ def analytics_overview(db: Session) -> dict:
                 IncidentStatus.NEEDS_REVIEW,
             )
         ),
-        "model_status": ("AVAILABLE" if (has_model or ml_service.available()) else "NOT_READY"),
+        "model_status": ("AVAILABLE" if (has_model or rag_service.available()) else "NOT_READY"),
         "note": "Counts are of recorded human decisions only; no model predictions are included.",
     }
 

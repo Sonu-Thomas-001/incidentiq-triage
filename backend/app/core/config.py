@@ -24,10 +24,20 @@ class Settings(BaseSettings):
     )
     log_level: str = "INFO"
     demo_password: str = ""
-    # Directory with trained-model artifacts + manifest.json (produced by `python -m incidentiq_ml train`).
-    # Only point this at artifacts you produced yourself: joblib files can execute code when loaded.
-    evaluation_dir: str = str(Path(__file__).resolve().parents[3] / "ml" / "artifacts" / "results")
-    model_dir: str = str(Path(__file__).resolve().parents[3] / "ml" / "artifacts")
+    # Offline evaluation summaries written by `python -m app.scripts.rag_eval`.
+    evaluation_dir: str = str(Path(__file__).resolve().parents[2] / "data" / "evaluation")
+
+    # Retrieval-augmented assignment: a local Chroma index of ServiceNow incidents that already have
+    # an assignment group. Ticket text is embedded with a Gemini embedding model (redacted/clipped).
+    chroma_dir: str = str(Path(__file__).resolve().parents[2] / "data" / "chroma")
+    embedding_model: str = "gemini-embedding-001"
+    # Embedding models are served from regional endpoints (not "global").
+    embedding_location: str = "us-central1"
+    embedding_dimensions: int = Field(default=768, ge=128, le=3072)
+    rag_top_k: int = Field(default=7, ge=3, le=20)
+    # Below this best-neighbour cosine similarity the ticket is "unlike anything indexed": no answer.
+    rag_min_similarity: float = Field(default=0.5, ge=0.0, le=1.0)
+    rag_min_index_size: int = Field(default=20, ge=1)
 
     # Routing policy (Phase 3). Disabled by default: until thresholds are validated on held-out
     # data, every incident takes the human-review path. The defaults below are placeholders.

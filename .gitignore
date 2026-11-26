@@ -39,3 +39,6 @@ Thumbs.db
 *.tsbuildinfo
 frontend/test-results/
 frontend/playwright-report/
+
+# Local Chroma retrieval index and RAG evaluation output
+backend/data/chroma/

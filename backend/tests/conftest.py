@@ -12,7 +12,7 @@ from app.db.session import build_engine, get_db
 from app.main import app
 from app.models import Team, User
 from app.models.enums import Role
-from app.services import ml_service
+from app.services import rag_service
 
 PASSWORD = "test-only-Passw0rd!"
 _HASH = hash_password(PASSWORD)  # hashed once; scrypt is deliberately slow
@@ -20,15 +20,17 @@ Settings.model_config["env_file"] = None  # tests must never read a developer's 
 
 
 @pytest.fixture(autouse=True)
-def model_dir(tmp_path, monkeypatch):
-    """Every test gets an empty MODEL_DIR (=> NOT_READY) unless it builds artifacts there."""
-    d = tmp_path / "models"
-    monkeypatch.setenv("MODEL_DIR", str(d))
+def chroma_dir(tmp_path, monkeypatch):
+    """Every test gets an empty Chroma index (=> NOT_READY) and no real Gemini client."""
+    d = tmp_path / "chroma"
+    monkeypatch.setenv("CHROMA_DIR", str(d))
     get_settings.cache_clear()
-    ml_service.clear_cache()
+    rag_service.reset_cache()
+    rag_service.set_factories(lambda s: None, lambda s: None)
     yield d
+    rag_service.set_factories(None, None)
     get_settings.cache_clear()
-    ml_service.clear_cache()
+    rag_service.reset_cache()
 
 
 @pytest.fixture

@@ -6,7 +6,6 @@ from sqlalchemy import func, select
 from app.core.config import get_settings
 from app.models import AuditEvent, TriagePrediction, WorkflowRun
 from app.services import llm_assist, routing_policy
-from tests.test_triage_ml import DOCS, both_models, build_artifact  # noqa: F401
 
 
 def _run(api, inc, who="analyst", **extra):
@@ -117,20 +116,6 @@ def test_runs_listing_and_config(api, world):
     assert "google_api_key" not in str(cfg).lower()
 
 
-def test_demo_models_never_make_a_proposal_even_when_routing_enabled(
-    api, world, both_models, monkeypatch  # noqa: F811
-):
-    monkeypatch.setenv("ROUTING_ENABLED", "true")
-    get_settings.cache_clear()
-    inc = api.create(title="VPN connection drops", description="vpn connection drops often")
-    body = _run(api, inc).json()
-    assert body["routing"]["decision"] == "NEEDS_REVIEW"
-    assert body["routing"]["auto_assign"] is False
-    assert body["routing"]["human_approval_required"] is True
-    assert "routing_disabled" not in body["routing"]["reasons"]
-    get_settings.cache_clear()
-
-
 def _eligible_ml():
     def out(label, conf):
         return {
@@ -138,7 +123,7 @@ def _eligible_ml():
             "available": True,
             "label": label,
             "confidence": conf,
-            "confidence_kind": "calibrated_probability",
+            "confidence_kind": "retrieval_agreement",
             "provenance": "real",
             "is_demo": False,
         }

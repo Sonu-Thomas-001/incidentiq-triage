@@ -19,6 +19,7 @@ ignore = ["B008", "E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "app/db/seed.py" = ["E501"]
+"tests/*" = ["F811"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

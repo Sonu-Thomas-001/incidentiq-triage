@@ -4,6 +4,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, Query
 
 from app.api.deps import ANALYST_OR_ADMIN, STAFF, DbSession, Paging, require_roles
+from app.core.config import get_settings
 from app.integrations.servicenow import service
 from app.models import User
 from app.models.enums import Role
@@ -12,7 +13,7 @@ from app.schemas.servicenow import (
     SyncApproveRequest,
     TeamMappingRequest,
 )
-from app.services import autopilot
+from app.services import autopilot, rag_indexing, rag_service
 
 router = APIRouter(prefix="/integrations/servicenow", tags=["servicenow"])
 Analyst = Annotated[User, Depends(require_roles(*ANALYST_OR_ADMIN))]
@@ -64,6 +65,29 @@ def import_groups(db: DbSession, user: Admin) -> dict[str, Any]:
 def autopilot_status(user: Analyst) -> dict[str, Any]:
     """Polling configuration and the result of the last cycle."""
     return autopilot.status()
+
+
+@router.get("/rag")
+def rag_status(user: Analyst) -> dict[str, Any]:
+    """State of the local retrieval index that powers assignment recommendations."""
+    s = get_settings()
+    return {
+        "index_size": rag_service.index_size(s),
+        "min_index_size": s.rag_min_index_size,
+        "embedding_model": s.embedding_model,
+        "decision_model": s.gemini_model,
+        "top_k": s.rag_top_k,
+        "min_similarity": s.rag_min_similarity,
+        "ready": rag_service.index_size(s) >= s.rag_min_index_size and s.gemini_enabled,
+        "gemini_enabled": s.gemini_enabled,
+    }
+
+
+@router.post("/rag/index")
+def rag_index(user: Admin) -> dict[str, Any]:
+    """ADMIN: (re)build the local Chroma index from assigned ServiceNow incidents. Read-only toward
+    ServiceNow; redacted ticket text is sent to the Gemini embedding model."""
+    return rag_indexing.sync_index()
 
 
 @router.post("/autopilot/run")
